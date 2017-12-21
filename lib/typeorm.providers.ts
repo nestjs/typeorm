@@ -9,8 +9,13 @@ import { getRepositoryToken } from './typeorm.utils';
 
 export function createTypeOrmProviders(
   options?: ConnectionOptions,
-  entities?: Function[],
+  entities: Function[] = [],
 ) {
+  options = {
+    ...options,
+    entities
+  };
+
   const connectionProvider = {
     provide: Connection,
     useFactory: async () => await createConnection(options),
