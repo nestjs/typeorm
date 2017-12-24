@@ -11,10 +11,12 @@ export function createTypeOrmProviders(
   options?: ConnectionOptions,
   entities?: Function[],
 ) {
+
   const connectionProvider = {
     provide: Connection,
     useFactory: async () => await createConnection(options),
   };
+
   const entityManagerProvider = {
     provide: EntityManager,
     useFactory: (connection: Connection) => connection.manager,
@@ -26,7 +28,12 @@ export function createTypeOrmProviders(
       ? connection.getMongoRepository(entity)
       : connection.getRepository(entity);
 
-  const repositories = (entities || []).map(entity => ({
+  let repositoryEntities = entities;
+  if (!repositoryEntities && options && options.entities) {
+    repositoryEntities = options.entities.filter(entity => (typeof entity !== 'string'))
+  }
+
+  const repositories = (repositoryEntities || []).map(entity => ({
     provide: getRepositoryToken(entity),
     useFactory: (connection: Connection) => getRepository(connection, entity) as any,
     inject: [Connection],
