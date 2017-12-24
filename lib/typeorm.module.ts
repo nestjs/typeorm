@@ -7,8 +7,13 @@ import { createTypeOrmProviders } from './typeorm.providers';
 @Module({})
 export class TypeOrmModule {
 	static forRoot(
-		entities: Function[] = [],
-		options?: ConnectionOptions,
+		{
+			entities,
+			options
+		}: {
+			options?: ConnectionOptions,
+			entities?: Function[]
+		}
 	): DynamicModule {
 		const providers = createTypeOrmProviders(options, entities);
 		return {
