@@ -26,7 +26,7 @@ export class TypeOrmModule {
 	static forFeature(
 		entities: Function[] = []
 	): this {
-		this.pendingModels = [
+		this.pendingEntities = [
 			...entities,
 			...this.pendingEntities
 		];
