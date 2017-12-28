@@ -6,15 +6,31 @@ import { createTypeOrmProviders } from './typeorm.providers';
 @Global()
 @Module({})
 export class TypeOrmModule {
+	static private pendingEntities: Function[] = [];
+
 	static forRoot(
 		entities: Function[] = [],
 		options?: ConnectionOptions,
 	): DynamicModule {
-		const providers = createTypeOrmProviders(options, entities);
+		const providers = createTypeOrmProviders(options, [
+			...entities,
+			...this.pendingEntities
+		]);
 		return {
 			module: TypeOrmModule,
 			components: providers,
 			exports: providers,
 		};
+	}
+	
+	static forFeature(
+		entities: Function[] = []
+	): this {
+		this.pendingEntities = [
+			...entities,
+			...this.pendingEntities
+		];
+
+		return this;
 	}
 }
