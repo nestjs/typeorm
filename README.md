@@ -34,7 +34,7 @@ $ npm i --save @nestjs/typeorm typeorm
 
 ## Quick Start
 
-[Overview & Tutorial - COMING SOON!](https://docs.nestjs.com/techniques/sql)
+[Overview & Tutorial](https://docs.nestjs.com/techniques/sql)
 
 ## People
 

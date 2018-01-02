@@ -17,6 +17,8 @@
         "linebreak-style": [
             false
         ],
+        "indent": false,
+        "member-access": false,
         "ban-types": false,
         "max-classes-per-file": [
             false
