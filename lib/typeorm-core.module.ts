@@ -5,19 +5,20 @@ import {
   createConnection,
   EntityManager,
 } from 'typeorm';
+import { getConnectionToken } from "./typeorm.utils";
 
 @Global()
 @Module({})
 export class TypeOrmCoreModule {
   static forRoot(options?: ConnectionOptions): DynamicModule {
     const connectionProvider = {
-      provide: Connection,
+      provide: getConnectionToken(options),
       useFactory: async () => await createConnection(options),
     };
     const entityManagerProvider = {
       provide: EntityManager,
       useFactory: (connection: Connection) => connection.manager,
-      inject: [Connection],
+      inject: [getConnectionToken(options)],
     };
     return {
       module: TypeOrmCoreModule,
