@@ -11,7 +11,8 @@ export function getRepositoryToken(entity: Function) {
  * @returns {string | Function} The Connection injection token.
  */
 export function getConnectionToken(connection: Connection|ConnectionOptions|string = 'default'): string|Function {
-  return 'string' === typeof connection ? `${connection}Connection`
-    : 'default' === connection.name ? Connection
+  return 'default' === connection ? Connection
+    : 'string' === typeof connection ? `${connection}Connection`
+    : 'default' === connection.name || !connection.name ? Connection
     : `${connection.name}Connection`;
 }
