@@ -6,5 +6,5 @@ import { getRepositoryToken, getConnectionToken } from './typeorm.utils';
 export const InjectRepository = (entity: Function) =>
   Inject(getRepositoryToken(entity));
 
-export const InjectConnection: ParameterDecorator = (connection: Connection|ConnectionOptions|string) =>
+export const InjectConnection: (connection?: Connection|ConnectionOptions|string) => ParameterDecorator = (connection?: Connection|ConnectionOptions|string) =>
   Inject(getConnectionToken(connection));
