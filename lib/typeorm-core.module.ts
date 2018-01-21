@@ -2,10 +2,9 @@ import { Module, DynamicModule, Global } from '@nestjs/common';
 import {
   ConnectionOptions,
   Connection,
-  createConnection,
-  EntityManager,
+  createConnection
 } from 'typeorm';
-import { getConnectionToken } from "./typeorm.utils";
+import { getConnectionToken, getEntityManagerToken } from "./typeorm.utils";
 
 @Global()
 @Module({})
@@ -16,7 +15,7 @@ export class TypeOrmCoreModule {
       useFactory: async () => await createConnection(options),
     };
     const entityManagerProvider = {
-      provide: EntityManager,
+      provide: getEntityManagerToken(options),
       useFactory: (connection: Connection) => connection.manager,
       inject: [getConnectionToken(options)],
     };
