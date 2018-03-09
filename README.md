@@ -24,7 +24,7 @@
 
 ## Description
 
-This's a [TypeORM](typeorm.io) module for [Nest](https://github.com/nestjs/nest).
+This's a [TypeORM](http://typeorm.io) module for [Nest](https://github.com/nestjs/nest).
 
 ## Installation
 
