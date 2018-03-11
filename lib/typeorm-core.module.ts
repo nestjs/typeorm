@@ -5,6 +5,7 @@ import {
   createConnection,
   EntityManager,
 } from 'typeorm';
+import { attemptConnectionCreation } from './typeorm.utils';
 
 @Global()
 @Module({})
@@ -12,7 +13,7 @@ export class TypeOrmCoreModule {
   static forRoot(options?: ConnectionOptions): DynamicModule {
     const connectionProvider = {
       provide: Connection,
-      useFactory: async () => await createConnection(options),
+      useFactory: async () => await attemptConnectionCreation(createConnection, options),
     };
     const entityManagerProvider = {
       provide: EntityManager,
