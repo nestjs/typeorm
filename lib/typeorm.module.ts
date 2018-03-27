@@ -1,5 +1,5 @@
 import { Module, DynamicModule, Global } from '@nestjs/common';
-import { ConnectionOptions } from 'typeorm';
+import { Connection, ConnectionOptions } from 'typeorm';
 
 import { createTypeOrmProviders } from './typeorm.providers';
 import { TypeOrmCoreModule } from './typeorm-core.module';
@@ -14,8 +14,8 @@ export class TypeOrmModule {
     };
   }
 
-  static forFeature(entities: Function[] = []): DynamicModule {
-    const providers = createTypeOrmProviders(entities);
+  static forFeature(entities: Function[] = [], connection: Connection|ConnectionOptions|string = 'default'): DynamicModule {
+    const providers = createTypeOrmProviders(entities, connection);
     return {
       module: TypeOrmModule,
       components: providers,
