@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^5.0.0",
+    "rxjs": "^5.5.8",
     "typeorm": "^0.1.18",
     "typescript": "^2.4.2"
   },
@@ -18,8 +19,7 @@
     "@types/node": "^7.0.41",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.0",
-    "prettier": "^1.11.1",
-    "rxjs": "^5.5.8"
+    "prettier": "^1.11.1"
   },
   "lint-staged": {
     "*.{js,json,css,md}": ["prettier --write", "git add"]
