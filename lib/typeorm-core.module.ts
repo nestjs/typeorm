@@ -1,10 +1,11 @@
 import { Module, DynamicModule, Global } from '@nestjs/common';
+import { ConnectionOptions, Connection, createConnection } from 'typeorm';
 import {
-  ConnectionOptions,
-  Connection,
-  createConnection
-} from 'typeorm';
-import { getConnectionToken, getEntityManagerToken } from "./typeorm.utils";
+  getConnectionToken,
+  getEntityManagerToken,
+  handleRetry,
+} from './typeorm.utils';
+import { fromPromise } from 'rxjs/observable/fromPromise';
 
 @Global()
 @Module({})
@@ -12,7 +13,10 @@ export class TypeOrmCoreModule {
   static forRoot(options?: ConnectionOptions): DynamicModule {
     const connectionProvider = {
       provide: getConnectionToken(options),
-      useFactory: async () => await createConnection(options),
+      useFactory: async () =>
+        await fromPromise(createConnection(options))
+          .pipe(handleRetry)
+          .toPromise(),
     };
     const entityManagerProvider = {
       provide: getEntityManagerToken(options),
@@ -21,7 +25,7 @@ export class TypeOrmCoreModule {
     };
     return {
       module: TypeOrmCoreModule,
-      components: [entityManagerProvider, connectionProvider],
+      providers: [entityManagerProvider, connectionProvider],
       exports: [entityManagerProvider, connectionProvider],
     };
   }

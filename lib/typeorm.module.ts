@@ -10,15 +10,18 @@ export class TypeOrmModule {
     const providers = createTypeOrmProviders();
     return {
       module: TypeOrmModule,
-      modules: [TypeOrmCoreModule.forRoot(options)],
+      imports: [TypeOrmCoreModule.forRoot(options)],
     };
   }
 
-  static forFeature(entities: Function[] = [], connection: Connection|ConnectionOptions|string = 'default'): DynamicModule {
+  static forFeature(
+    entities: Function[] = [],
+    connection: Connection | ConnectionOptions | string = 'default',
+  ): DynamicModule {
     const providers = createTypeOrmProviders(entities, connection);
     return {
       module: TypeOrmModule,
-      components: providers,
+      providers: providers,
       exports: providers,
     };
   }
