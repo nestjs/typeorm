@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^4.5.0",
-    "typeorm": "^0.1.9",
+    "typeorm": "^0.2.3",
     "typescript": "^2.4.2"
   },
   "devDependencies": {
