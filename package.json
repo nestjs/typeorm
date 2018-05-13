@@ -21,7 +21,7 @@
   "peerDependencies": {
     "@nestjs/common": "^5.0.0",
     "reflect-metadata": "0.1.12",
-    "rxjs": "^5.5.8",
+    "rxjs": "^6.0.0",
     "typeorm": "^0.1.18"
   },
   "lint-staged": {
