@@ -1,8 +1,7 @@
 {
   "name": "@nestjs/typeorm",
-  "version": "2.1.0",
-  "description":
-    "Nest - modern, fast, powerful node.js web framework (@typeorm)",
+  "version": "3.0.0",
+  "description": "Nest - modern, fast, powerful node.js web framework (@typeorm)",
   "author": "Kamil Mysliwiec",
   "license": "MIT",
   "scripts": {

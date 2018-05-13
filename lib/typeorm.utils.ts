@@ -1,5 +1,5 @@
 import { Connection, ConnectionOptions, EntityManager } from 'typeorm';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { retryWhen, scan, delay } from 'rxjs/operators';
 import { Logger } from '@nestjs/common';
 
@@ -49,7 +49,8 @@ export function handleRetry<T>(source: Observable<T>): Observable<T> {
       e.pipe(
         scan((errorCount, error) => {
           Logger.error(
-            `Unable to connect to the database. Retrying (${errorCount + 1})...`,
+            `Unable to connect to the database. Retrying (${errorCount +
+              1})...`,
             '',
             'TypeOrmModule',
           );
