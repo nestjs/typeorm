@@ -5,7 +5,7 @@ import {
   getEntityManagerToken,
   handleRetry,
 } from './typeorm.utils';
-import { from } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Global()
 @Module({})
@@ -14,7 +14,7 @@ export class TypeOrmCoreModule {
     const connectionProvider = {
       provide: getConnectionToken(options),
       useFactory: async () =>
-        await from(createConnection(options))
+        await Observable.from(createConnection(options))
           .pipe(handleRetry)
           .toPromise(),
     };
