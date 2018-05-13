@@ -16,4 +16,4 @@ npm-debug.log
 /.nyc_output
 
 # dist
-/dist
+dist

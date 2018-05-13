@@ -1,19 +1,33 @@
 {
   "name": "@nestjs/typeorm",
   "version": "2.1.0",
-  "description": "Nest - modern, fast, powerful node.js web framework (@typeorm)",
+  "description":
+    "Nest - modern, fast, powerful node.js web framework (@typeorm)",
   "author": "Kamil Mysliwiec",
   "license": "MIT",
   "scripts": {
-    "build": "tsc -p tsconfig.json"
-  },
-  "dependencies": {
-    "@nestjs/common": "^4.5.0",
-    "typeorm": "^0.2.3",
-    "typescript": "^2.4.2"
+    "build": "tsc -p tsconfig.json",
+    "precommit": "lint-staged",
+    "prepublish:npm": "npm run build",
+    "publish:npm": "npm publish --access public"
   },
   "devDependencies": {
     "@types/node": "^7.0.41",
-    "ts-node": "^3.3.0"
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.0",
+    "prettier": "^1.11.1",
+    "typescript": "^2.8.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^5.0.0",
+    "reflect-metadata": "0.1.12",
+    "rxjs": "^6.0.0",
+    "typeorm": "^0.2.3"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
