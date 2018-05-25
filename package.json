@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/typeorm",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Nest - modern, fast, powerful node.js web framework (@typeorm)",
   "author": "Kamil Mysliwiec",
   "license": "MIT",
@@ -8,13 +8,16 @@
     "build": "tsc -p tsconfig.json",
     "precommit": "lint-staged",
     "prepublish:npm": "npm run build",
-    "publish:npm": "npm publish --access public"
+    "publish:npm": "npm publish --access public",
+    "prepublish:next": "npm run build",
+    "publish:next": "npm publish --access public --tag next"
   },
   "devDependencies": {
     "@types/node": "^7.0.41",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.0",
     "prettier": "^1.11.1",
+    "rxjs-compat": "^6.2.0",
     "typescript": "^2.8.0"
   },
   "peerDependencies": {

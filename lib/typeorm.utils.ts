@@ -1,7 +1,7 @@
-import { Connection, ConnectionOptions, EntityManager } from 'typeorm';
-import { Observable } from 'rxjs';
-import { retryWhen, scan, delay } from 'rxjs/operators';
 import { Logger } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { delay, retryWhen, scan } from 'rxjs/operators';
+import { Connection, ConnectionOptions, EntityManager } from 'typeorm';
 
 export function getRepositoryToken(entity: Function) {
   return `${entity.name}Repository`;
@@ -43,24 +43,32 @@ export function getEntityManagerToken(
         : `${connection.name}EntityManager`;
 }
 
-export function handleRetry<T>(source: Observable<T>): Observable<T> {
-  return source.pipe(
-    retryWhen(e =>
-      e.pipe(
-        scan((errorCount, error) => {
-          Logger.error(
-            `Unable to connect to the database. Retrying (${errorCount +
-              1})...`,
-            '',
-            'TypeOrmModule',
-          );
-          if (errorCount >= 10) {
-            throw error;
-          }
-          return errorCount + 1;
-        }, 0),
-        delay(3000),
+export function handleRetry(
+  retryAttempts = 9,
+  retryDelay = 3000,
+): <T>(source: Observable<T>) => Observable<T> {
+  return <T>(source: Observable<T>) =>
+    source.pipe(
+      retryWhen(e =>
+        e.pipe(
+          scan((errorCount, error) => {
+            Logger.error(
+              `Unable to connect to the database. Retrying (${errorCount +
+                1})...`,
+              '',
+              'TypeOrmModule',
+            );
+            if (errorCount + 1 >= retryAttempts) {
+              throw error;
+            }
+            return errorCount + 1;
+          }, 0),
+          delay(retryDelay),
+        ),
       ),
-    ),
-  );
+    );
+}
+
+export function getConnectionName(options: ConnectionOptions) {
+  return options && options.name ? options.name : 'default';
 }

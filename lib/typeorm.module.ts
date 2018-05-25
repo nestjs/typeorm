@@ -1,12 +1,14 @@
-import { Module, DynamicModule, Global } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { Connection, ConnectionOptions } from 'typeorm';
-
-import { createTypeOrmProviders } from './typeorm.providers';
+import { TypeOrmModuleOptions } from './interfaces/typeorm-options.interface';
 import { TypeOrmCoreModule } from './typeorm-core.module';
+import { createTypeOrmProviders } from './typeorm.providers';
 
 @Module({})
 export class TypeOrmModule {
-  static forRoot(options?: ConnectionOptions): DynamicModule {
+  static forRoot(
+    options?: TypeOrmModuleOptions & Partial<ConnectionOptions>,
+  ): DynamicModule {
     const providers = createTypeOrmProviders();
     return {
       module: TypeOrmModule,
