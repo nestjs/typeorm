@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Connection, ConnectionOptions } from 'typeorm';
 
-const AUTO_DELCARED_DEPS_METADATA = 'design:paramtypes';
+const AUTO_DECLARED_DEPS_METADATA = 'design:paramtypes';
 const SELF_DECLARED_DEPS_METADATA = 'self:paramtypes';
 
 import {
@@ -37,17 +37,16 @@ export function InjectedEventSubscriber(
       Object.assign(conn, {
         subscribers: [].concat(conn.subscribers).concat([instance]),
       });
-      console.log(f);
       return instance;
     };
-
+    Object.defineProperty(f, 'name', { value: original.name });
     f.prototype = original.prototype;
 
-    // Apply metadata from design type for NestJS auto-injection, and add the default Connection
+    // Apply metadata from design type for NestJS auto-injection, and add the default connection
     const argsMetadata =
-      Reflect.getMetadata(AUTO_DELCARED_DEPS_METADATA, target) || [];
+      Reflect.getMetadata(AUTO_DECLARED_DEPS_METADATA, target) || [];
     const newArgsMetadata = [Connection, ...argsMetadata];
-    Reflect.defineMetadata(AUTO_DELCARED_DEPS_METADATA, newArgsMetadata, f);
+    Reflect.defineMetadata(AUTO_DECLARED_DEPS_METADATA, newArgsMetadata, f);
 
     // Apply metadata from Token @Inject, and append Connection request as parameter to the decorator
     const manualMetadata =
