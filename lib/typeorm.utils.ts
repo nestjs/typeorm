@@ -51,7 +51,7 @@ export function handleRetry(
     source.pipe(
       retryWhen(e =>
         e.pipe(
-          scan((errorCount, error) => {
+          scan((errorCount, error: Error) => {
             Logger.error(
               `Unable to connect to the database. Retrying (${errorCount +
                 1})...`,
