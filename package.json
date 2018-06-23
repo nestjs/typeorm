@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/typeorm",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Nest - modern, fast, powerful node.js web framework (@typeorm)",
   "author": "Kamil Mysliwiec",
   "license": "MIT",
@@ -13,20 +13,18 @@
     "publish:next": "npm publish --access public --tag next"
   },
   "devDependencies": {
+    "@nestjs/common": "^5.0.0",
     "@types/node": "^7.0.41",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.0",
     "prettier": "^1.11.1",
+    "reflect-metadata": "0.1.12",
+    "rxjs": "^6.0.0",
     "rxjs-compat": "^6.2.0",
+    "typeorm": "^0.2.3",
     "typescript": "^2.8.0"
   },
   "peerDependencies": {
-    "@nestjs/common": "^5.0.0",
-    "reflect-metadata": "0.1.12",
-    "rxjs": "^6.0.0",
-    "typeorm": "^0.2.3"
-  },
-  "optionalDependencies": {
     "@nestjs/common": "^5.0.0",
     "reflect-metadata": "0.1.12",
     "rxjs": "^6.0.0",
