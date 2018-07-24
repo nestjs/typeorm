@@ -1,4 +1,11 @@
-import { DynamicModule, Global, Module } from '@nestjs/common';
+import {
+  DynamicModule,
+  Global,
+  Inject,
+  Module,
+  OnModuleDestroy,
+} from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { from } from 'rxjs';
 import {
   Connection,
@@ -16,7 +23,13 @@ import {
 
 @Global()
 @Module({})
-export class TypeOrmCoreModule {
+export class TypeOrmCoreModule implements OnModuleDestroy {
+  constructor(
+    @Inject('TYPEORM_MODULE_OPTIONS')
+    private readonly options: TypeOrmModuleOptions & Partial<ConnectionOptions>,
+    private readonly moduleRef: ModuleRef,
+  ) {}
+
   static forRoot(
     options: TypeOrmModuleOptions & Partial<ConnectionOptions> = {},
   ): DynamicModule {
@@ -27,6 +40,10 @@ export class TypeOrmCoreModule {
       ...typeOrmOptions
     } = options;
 
+    const keepConnectionOptionProvider = {
+      provide: 'TYPEORM_MODULE_OPTIONS',
+      useValue: options,
+    };
     const connectionProvider = {
       provide: getConnectionToken(typeOrmOptions as ConnectionOptions),
       useFactory: async () => {
@@ -54,8 +71,22 @@ export class TypeOrmCoreModule {
     };
     return {
       module: TypeOrmCoreModule,
-      providers: [entityManagerProvider, connectionProvider],
+      providers: [
+        entityManagerProvider,
+        connectionProvider,
+        keepConnectionOptionProvider,
+      ],
       exports: [entityManagerProvider, connectionProvider],
     };
+  }
+
+  async onModuleDestroy() {
+    if (this.options.keepConnectionAlive) {
+      return;
+    }
+    const connection = this.moduleRef.get<Connection>(
+      getConnectionToken(this.options as ConnectionOptions),
+    );
+    connection && (await connection.close());
   }
 }
