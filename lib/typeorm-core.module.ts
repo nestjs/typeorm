@@ -40,7 +40,7 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
       ...typeOrmOptions
     } = options;
 
-    const keepConnectionOptionProvider = {
+    const typeOrmModuleOptions = {
       provide: 'TYPEORM_MODULE_OPTIONS',
       useValue: options,
     };
@@ -74,7 +74,7 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
       providers: [
         entityManagerProvider,
         connectionProvider,
-        keepConnectionOptionProvider,
+        typeOrmModuleOptions,
       ],
       exports: [entityManagerProvider, connectionProvider],
     };
