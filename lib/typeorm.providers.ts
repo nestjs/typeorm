@@ -1,10 +1,10 @@
 import {
-  ConnectionOptions,
-  Connection,
-  Repository,
   AbstractRepository,
+  Connection,
+  ConnectionOptions,
+  Repository,
 } from 'typeorm';
-import { getConnectionToken, getRepositoryToken } from './typeorm.utils';
+import { getConnectionToken, getRepositoryToken } from './common/typeorm.utils';
 
 export function createTypeOrmProviders(
   entities?: Function[],

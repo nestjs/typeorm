@@ -1,10 +1,9 @@
 import { Inject } from '@nestjs/common';
 import { Connection, ConnectionOptions } from 'typeorm';
-
 import {
-  getRepositoryToken,
   getConnectionToken,
   getEntityManagerToken,
+  getRepositoryToken,
 } from './typeorm.utils';
 
 export const InjectRepository = (entity: Function) =>

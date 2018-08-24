@@ -1,15 +1,15 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { Connection, ConnectionOptions } from 'typeorm';
-import { TypeOrmModuleOptions } from './interfaces/typeorm-options.interface';
+import {
+  TypeOrmModuleAsyncOptions,
+  TypeOrmModuleOptions,
+} from './interfaces/typeorm-options.interface';
 import { TypeOrmCoreModule } from './typeorm-core.module';
 import { createTypeOrmProviders } from './typeorm.providers';
 
 @Module({})
 export class TypeOrmModule {
-  static forRoot(
-    options?: TypeOrmModuleOptions & Partial<ConnectionOptions>,
-  ): DynamicModule {
-    const providers = createTypeOrmProviders();
+  static forRoot(options?: TypeOrmModuleOptions): DynamicModule {
     return {
       module: TypeOrmModule,
       imports: [TypeOrmCoreModule.forRoot(options)],
@@ -25,6 +25,13 @@ export class TypeOrmModule {
       module: TypeOrmModule,
       providers: providers,
       exports: providers,
+    };
+  }
+
+  static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
+    return {
+      module: TypeOrmModule,
+      imports: [TypeOrmCoreModule.forRootAsync(options)],
     };
   }
 }
