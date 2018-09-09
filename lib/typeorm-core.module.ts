@@ -7,7 +7,7 @@ import {
   Provider,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { from } from 'rxjs';
+import { defer } from 'rxjs';
 import {
   Connection,
   ConnectionOptions,
@@ -150,10 +150,11 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
       }
     } catch {}
 
-    return await from(
-      options.type
-        ? createConnection(options as ConnectionOptions)
-        : createConnection(),
+    return await defer(
+      () =>
+        options.type
+          ? createConnection(options as ConnectionOptions)
+          : createConnection(),
     )
       .pipe(handleRetry(options.retryAttempts, options.retryDelay))
       .toPromise();
