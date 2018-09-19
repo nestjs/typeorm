@@ -15,6 +15,7 @@ import {
   getConnection,
 } from 'typeorm';
 import {
+  generateString,
   getConnectionName,
   getConnectionToken,
   getEntityManagerToken,
@@ -25,7 +26,7 @@ import {
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
 } from './interfaces/typeorm-options.interface';
-import { TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
+import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
 
 @Global()
 @Module({})
@@ -83,7 +84,15 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
     return {
       module: TypeOrmCoreModule,
       imports: options.imports,
-      providers: [...asyncProviders, entityManagerProvider, connectionProvider],
+      providers: [
+        ...asyncProviders,
+        entityManagerProvider,
+        connectionProvider,
+        {
+          provide: TYPEORM_MODULE_ID,
+          useValue: generateString(),
+        },
+      ],
       exports: [entityManagerProvider, connectionProvider],
     };
   }

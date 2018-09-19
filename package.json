@@ -26,6 +26,9 @@
     "typeorm": "^0.2.7",
     "typescript": "^2.8.0"
   },
+  "dependencies": {
+    "uuid": "3.3.2"
+  },
   "peerDependencies": {
     "@nestjs/common": "^5.1.0",
     "@nestjs/core": "^5.1.0",

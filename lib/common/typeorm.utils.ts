@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
 import { Connection, ConnectionOptions, EntityManager } from 'typeorm';
+import * as uuid from 'uuid/v4';
 
 export function getRepositoryToken(entity: Function) {
   return `${entity.name}Repository`;
@@ -72,3 +73,5 @@ export function handleRetry(
 export function getConnectionName(options: ConnectionOptions) {
   return options && options.name ? options.name : 'default';
 }
+
+export const generateString = () => uuid();
