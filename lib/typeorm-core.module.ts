@@ -5,6 +5,7 @@ import {
   Module,
   OnModuleDestroy,
   Provider,
+  Type,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer } from 'rxjs';
@@ -101,9 +102,8 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
     if (this.options.keepConnectionAlive) {
       return;
     }
-    const connection = this.moduleRef.get<Connection>(
-      getConnectionToken(this.options as ConnectionOptions),
-    );
+    const connection = this.moduleRef.get<Connection>(getConnectionToken(this
+      .options as ConnectionOptions) as Type<Connection>);
     connection && (await connection.close());
   }
 
