@@ -9,7 +9,9 @@ export type TypeOrmModuleOptions = {
 } & Partial<ConnectionOptions>;
 
 export interface TypeOrmOptionsFactory {
-  createTypeOrmOptions(): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
+  createTypeOrmOptions(
+    name?: string,
+  ): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
 }
 
 export interface TypeOrmModuleAsyncOptions

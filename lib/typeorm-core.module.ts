@@ -135,7 +135,7 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
     return {
       provide: TYPEORM_MODULE_OPTIONS,
       useFactory: async (optionsFactory: TypeOrmOptionsFactory) =>
-        await optionsFactory.createTypeOrmOptions(),
+        await optionsFactory.createTypeOrmOptions(options.name),
       inject: [options.useClass || options.useExisting],
     };
   }
