@@ -4,6 +4,8 @@ import { delay, retryWhen, scan } from 'rxjs/operators';
 import { Connection, ConnectionOptions, EntityManager } from 'typeorm';
 import * as uuid from 'uuid/v4';
 
+const logger = new Logger('TypeOrmModule');
+
 export function getRepositoryToken(entity: Function) {
   return `${entity.name}Repository`;
 }
@@ -53,11 +55,10 @@ export function handleRetry(
       retryWhen(e =>
         e.pipe(
           scan((errorCount, error: Error) => {
-            Logger.error(
+            logger.error(
               `Unable to connect to the database. Retrying (${errorCount +
                 1})...`,
               error.stack,
-              'TypeOrmModule',
             );
             if (errorCount + 1 >= retryAttempts) {
               throw error;
