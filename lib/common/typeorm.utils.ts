@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
 import { Connection, ConnectionOptions, EntityManager, Repository, AbstractRepository } from 'typeorm';
@@ -38,7 +38,7 @@ export function getCustomRepositoryToken(repository: Function) {
  */
 export function getConnectionToken(
   connection: Connection | ConnectionOptions | string = 'default',
-): string | Function {
+): string | Function | Type<Connection> {
   return 'default' === connection
     ? Connection
     : 'string' === typeof connection
