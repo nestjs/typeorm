@@ -10,7 +10,7 @@ export type TypeOrmModuleOptions = {
 
 export interface TypeOrmOptionsFactory {
   createTypeOrmOptions(
-    name?: string,
+    connectionName?: string,
   ): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
 }
 
