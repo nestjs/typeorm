@@ -15,7 +15,7 @@
   "devDependencies": {
     "@nestjs/common": "6.0.0",
     "@nestjs/core": "6.0.0",
-    "@types/node": "7.0.57",
+    "@types/node": "7.10.5",
     "husky": "0.14.3",
     "lint-staged": "7.0.0",
     "prettier": "1.16.4",
