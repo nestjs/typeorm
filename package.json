@@ -17,7 +17,7 @@
     "@nestjs/core": "6.0.0",
     "@types/node": "7.10.5",
     "husky": "0.14.3",
-    "lint-staged": "7.0.0",
+    "lint-staged": "7.3.0",
     "prettier": "1.16.4",
     "reflect-metadata": "0.1.12",
     "rxjs": "6.2.2",
