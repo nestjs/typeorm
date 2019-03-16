@@ -44,7 +44,7 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
       useValue: options,
     };
     const connectionProvider = {
-      provide: getConnectionToken(options as ConnectionOptions),
+      provide: getConnectionToken(options as ConnectionOptions) as string,
       useFactory: async () => await this.createConnectionFactory(options),
     };
     const entityManagerProvider = this.createEntityManagerProvider(
@@ -63,7 +63,7 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
 
   static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
     const connectionProvider = {
-      provide: getConnectionToken(options as ConnectionOptions),
+      provide: getConnectionToken(options as ConnectionOptions) as string,
       useFactory: async (typeOrmOptions: TypeOrmModuleOptions) => {
         if (options.name) {
           return await this.createConnectionFactory({
@@ -76,7 +76,7 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
       inject: [TYPEORM_MODULE_OPTIONS],
     };
     const entityManagerProvider = {
-      provide: getEntityManagerToken(options as ConnectionOptions),
+      provide: getEntityManagerToken(options as ConnectionOptions) as string,
       useFactory: (connection: Connection) => connection.manager,
       inject: [getConnectionToken(options as ConnectionOptions)],
     };
@@ -144,7 +144,7 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
     options: ConnectionOptions,
   ): Provider {
     return {
-      provide: getEntityManagerToken(options),
+      provide: getEntityManagerToken(options) as string,
       useFactory: (connection: Connection) => connection.manager,
       inject: [getConnectionToken(options)],
     };
@@ -159,11 +159,10 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
       }
     } catch {}
 
-    return await defer(
-      () =>
-        options.type
-          ? createConnection(options as ConnectionOptions)
-          : createConnection(),
+    return await defer(() =>
+      options.type
+        ? createConnection(options as ConnectionOptions)
+        : createConnection(),
     )
       .pipe(handleRetry(options.retryAttempts, options.retryDelay))
       .toPromise();
