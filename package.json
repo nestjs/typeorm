@@ -23,7 +23,7 @@
     "rxjs": "6.2.2",
     "rxjs-compat": "6.2.0",
     "typeorm": "0.2.7",
-    "typescript": "^3.3.3333"
+    "typescript": "3.3.3333"
   },
   "dependencies": {
     "uuid": "3.3.2"
