@@ -1,14 +1,20 @@
 import { Logger, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
-import { Connection, ConnectionOptions, EntityManager, Repository, AbstractRepository } from 'typeorm';
+import {
+  AbstractRepository,
+  Connection,
+  ConnectionOptions,
+  EntityManager,
+  Repository,
+} from 'typeorm';
 import * as uuid from 'uuid/v4';
 
 const logger = new Logger('TypeOrmModule');
 
 /**
  * This function generates an injection token for an Entity or Repository
- * @param {Function} This parameter can either be an Entity or Repository 
+ * @param {Function} This parameter can either be an Entity or Repository
  * @returns {string} The Entity | Repository injection token
  */
 export function getRepositoryToken(entity: Function) {
@@ -23,7 +29,7 @@ export function getRepositoryToken(entity: Function) {
 
 /**
  * This function generates an injection token for an Entity or Repository
- * @param {Function} This parameter can either be an Entity or Repository 
+ * @param {Function} This parameter can either be an Entity or Repository
  * @returns {string} The Repository injection token
  */
 export function getCustomRepositoryToken(repository: Function) {
