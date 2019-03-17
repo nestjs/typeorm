@@ -22,7 +22,7 @@
     "reflect-metadata": "0.1.12",
     "rxjs": "6.2.2",
     "rxjs-compat": "6.4.0",
-    "typeorm": "0.2.7",
+    "typeorm": "0.2.15",
     "typescript": "3.3.3333"
   },
   "dependencies": {
