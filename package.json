@@ -20,7 +20,7 @@
     "lint-staged": "8.1.5",
     "prettier": "1.16.4",
     "reflect-metadata": "0.1.12",
-    "rxjs": "6.2.2",
+    "rxjs": "6.4.0",
     "rxjs-compat": "6.4.0",
     "typeorm": "0.2.7",
     "typescript": "3.3.3333"
