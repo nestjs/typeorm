@@ -27,7 +27,7 @@ export function createTypeOrmProviders(
     connection.getCustomRepository(entity);
 
   const repositories = (entities || []).map(entity => ({
-    provide: getRepositoryToken(entity),
+    provide: getRepositoryToken(entity, connection as string),
     useFactory: (connection: Connection) => {
       if (entity.prototype instanceof Repository) {
         return getCustomRepository(connection, entity) as any;

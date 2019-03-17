@@ -6,8 +6,10 @@ import {
   getRepositoryToken,
 } from './typeorm.utils';
 
-export const InjectRepository = (entity: Function) =>
-  Inject(getRepositoryToken(entity));
+export const InjectRepository = (
+  entity: Function,
+  connection: string = 'default',
+) => Inject(getRepositoryToken(entity, connection));
 
 export const InjectConnection: (
   connection?: Connection | ConnectionOptions | string,

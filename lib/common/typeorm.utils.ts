@@ -15,16 +15,20 @@ const logger = new Logger('TypeOrmModule');
 /**
  * This function generates an injection token for an Entity or Repository
  * @param {Function} This parameter can either be an Entity or Repository
+ * @param {string} [connection='default'] Connection name
  * @returns {string} The Entity | Repository injection token
  */
-export function getRepositoryToken(entity: Function) {
+export function getRepositoryToken(
+  entity: Function,
+  connection: string = 'default',
+) {
   if (
     entity.prototype instanceof Repository ||
     entity.prototype instanceof AbstractRepository
   ) {
-    return getCustomRepositoryToken(entity);
+    return `${connection}_${getCustomRepositoryToken(entity)}`;
   }
-  return `${entity.name}Repository`;
+  return `${connection}_${entity.name}Repository`;
 }
 
 /**
@@ -48,10 +52,10 @@ export function getConnectionToken(
   return 'default' === connection
     ? Connection
     : 'string' === typeof connection
-      ? `${connection}Connection`
-      : 'default' === connection.name || !connection.name
-        ? Connection
-        : `${connection.name}Connection`;
+    ? `${connection}Connection`
+    : 'default' === connection.name || !connection.name
+    ? Connection
+    : `${connection.name}Connection`;
 }
 
 /**
@@ -66,10 +70,10 @@ export function getEntityManagerToken(
   return 'default' === connection
     ? EntityManager
     : 'string' === typeof connection
-      ? `${connection}EntityManager`
-      : 'default' === connection.name || !connection.name
-        ? EntityManager
-        : `${connection.name}EntityManager`;
+    ? `${connection}EntityManager`
+    : 'default' === connection.name || !connection.name
+    ? EntityManager
+    : `${connection.name}EntityManager`;
 }
 
 export function handleRetry(
