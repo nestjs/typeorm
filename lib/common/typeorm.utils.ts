@@ -8,7 +8,9 @@ import {
   EntityManager,
   Repository,
 } from 'typeorm';
+import { isNullOrUndefined } from 'util';
 import * as uuid from 'uuid/v4';
+import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 
 const logger = new Logger('TypeOrmModule');
 
@@ -18,6 +20,9 @@ const logger = new Logger('TypeOrmModule');
  * @returns {string} The Entity | Repository injection token
  */
 export function getRepositoryToken(entity: Function) {
+  if (isNullOrUndefined(entity)) {
+    throw new CircularDependencyException('@InjectRepository()');
+  }
   if (
     entity.prototype instanceof Repository ||
     entity.prototype instanceof AbstractRepository
@@ -33,6 +38,9 @@ export function getRepositoryToken(entity: Function) {
  * @returns {string} The Repository injection token
  */
 export function getCustomRepositoryToken(repository: Function) {
+  if (isNullOrUndefined(repository)) {
+    throw new CircularDependencyException('@InjectRepository()');
+  }
   return repository.name;
 }
 
@@ -48,10 +56,10 @@ export function getConnectionToken(
   return 'default' === connection
     ? Connection
     : 'string' === typeof connection
-      ? `${connection}Connection`
-      : 'default' === connection.name || !connection.name
-        ? Connection
-        : `${connection.name}Connection`;
+    ? `${connection}Connection`
+    : 'default' === connection.name || !connection.name
+    ? Connection
+    : `${connection.name}Connection`;
 }
 
 /**
@@ -66,10 +74,10 @@ export function getEntityManagerToken(
   return 'default' === connection
     ? EntityManager
     : 'string' === typeof connection
-      ? `${connection}EntityManager`
-      : 'default' === connection.name || !connection.name
-        ? EntityManager
-        : `${connection.name}EntityManager`;
+    ? `${connection}EntityManager`
+    : 'default' === connection.name || !connection.name
+    ? EntityManager
+    : `${connection.name}EntityManager`;
 }
 
 export function handleRetry(
