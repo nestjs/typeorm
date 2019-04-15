@@ -5,6 +5,7 @@ import {
   TypeOrmModuleOptions,
 } from './interfaces/typeorm-options.interface';
 import { TypeOrmCoreModule } from './typeorm-core.module';
+import { DEFAULT_CONNECTION_NAME } from './typeorm.constants';
 import { createTypeOrmProviders } from './typeorm.providers';
 
 @Module({})
@@ -18,7 +19,10 @@ export class TypeOrmModule {
 
   static forFeature(
     entities: Function[] = [],
-    connection: Connection | ConnectionOptions | string = 'default',
+    connection:
+      | Connection
+      | ConnectionOptions
+      | string = DEFAULT_CONNECTION_NAME,
   ): DynamicModule {
     const providers = createTypeOrmProviders(entities, connection);
     return {

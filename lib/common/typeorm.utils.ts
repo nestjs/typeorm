@@ -11,25 +11,33 @@ import {
 import { isNullOrUndefined } from 'util';
 import * as uuid from 'uuid/v4';
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
+import { DEFAULT_CONNECTION_NAME } from '../typeorm.constants';
 
 const logger = new Logger('TypeOrmModule');
 
 /**
  * This function generates an injection token for an Entity or Repository
  * @param {Function} This parameter can either be an Entity or Repository
+ * @param {string} [connection='default'] Connection name
  * @returns {string} The Entity | Repository injection token
  */
-export function getRepositoryToken(entity: Function) {
+export function getRepositoryToken(
+  entity: Function,
+  connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
+) {
   if (isNullOrUndefined(entity)) {
     throw new CircularDependencyException('@InjectRepository()');
   }
+  const connectionToken = getConnectionToken(connection);
+  const connectionPrefix =
+    connectionToken === DEFAULT_CONNECTION_NAME ? '' : `${connectionToken}_`;
   if (
     entity.prototype instanceof Repository ||
     entity.prototype instanceof AbstractRepository
   ) {
-    return getCustomRepositoryToken(entity);
+    return `${connectionPrefix}${getCustomRepositoryToken(entity)}`;
   }
-  return `${entity.name}Repository`;
+  return `${connectionPrefix}${entity.name}Repository`;
 }
 
 /**
@@ -51,13 +59,13 @@ export function getCustomRepositoryToken(repository: Function) {
  * @returns {string | Function} The Connection injection token.
  */
 export function getConnectionToken(
-  connection: Connection | ConnectionOptions | string = 'default',
+  connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
 ): string | Function | Type<Connection> {
-  return 'default' === connection
+  return DEFAULT_CONNECTION_NAME === connection
     ? Connection
     : 'string' === typeof connection
     ? `${connection}Connection`
-    : 'default' === connection.name || !connection.name
+    : DEFAULT_CONNECTION_NAME === connection.name || !connection.name
     ? Connection
     : `${connection.name}Connection`;
 }
@@ -69,13 +77,13 @@ export function getConnectionToken(
  * @returns {string | Function} The EntityManager injection token.
  */
 export function getEntityManagerToken(
-  connection: Connection | ConnectionOptions | string = 'default',
+  connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
 ): string | Function {
-  return 'default' === connection
+  return DEFAULT_CONNECTION_NAME === connection
     ? EntityManager
     : 'string' === typeof connection
     ? `${connection}EntityManager`
-    : 'default' === connection.name || !connection.name
+    : DEFAULT_CONNECTION_NAME === connection.name || !connection.name
     ? EntityManager
     : `${connection.name}EntityManager`;
 }
@@ -106,7 +114,7 @@ export function handleRetry(
 }
 
 export function getConnectionName(options: ConnectionOptions) {
-  return options && options.name ? options.name : 'default';
+  return options && options.name ? options.name : DEFAULT_CONNECTION_NAME;
 }
 
 export const generateString = () => uuid();
