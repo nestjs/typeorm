@@ -21,7 +21,7 @@
     "prettier": "1.17.0",
     "reflect-metadata": "0.1.12",
     "rxjs": "6.4.0",
-    "rxjs-compat": "6.4.0",
+    "rxjs-compat": "6.5.1",
     "typeorm": "0.2.16",
     "typescript": "3.4.4"
   },
