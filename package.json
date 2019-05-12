@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/typeorm",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "description": "Nest - modern, fast, powerful node.js web framework (@typeorm)",
   "author": "Kamil Mysliwiec",
   "license": "MIT",
@@ -10,18 +10,26 @@
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",
     "prepublish:next": "npm run build",
-    "publish:next": "npm publish --access public --tag next"
+    "publish:next": "npm publish --access public --tag next",
+    "test:integration": "jest --config ./tests/jest-e2e.json"
   },
   "devDependencies": {
     "@nestjs/common": "6.1.1",
     "@nestjs/core": "6.1.1",
+    "@nestjs/platform-express": "^6.2.0",
+    "@nestjs/testing": "^6.2.0",
+    "@types/jest": "^24.0.12",
     "@types/node": "7.10.5",
     "husky": "1.3.1",
+    "jest": "^24.8.0",
     "lint-staged": "8.1.5",
+    "mysql": "^2.17.1",
     "prettier": "1.17.0",
     "reflect-metadata": "0.1.12",
     "rxjs": "6.4.0",
     "rxjs-compat": "6.4.0",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.0.2",
     "typeorm": "0.2.16",
     "typescript": "3.4.3"
   },

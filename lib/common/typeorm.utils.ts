@@ -28,9 +28,7 @@ export function getRepositoryToken(
   if (isNullOrUndefined(entity)) {
     throw new CircularDependencyException('@InjectRepository()');
   }
-  const connectionToken = getConnectionToken(connection);
-  const connectionPrefix =
-    connectionToken === DEFAULT_CONNECTION_NAME ? '' : `${connectionToken}_`;
+  const connectionPrefix = getConnectionPrefix(connection);
   if (
     entity.prototype instanceof Repository ||
     entity.prototype instanceof AbstractRepository
@@ -68,6 +66,27 @@ export function getConnectionToken(
     : DEFAULT_CONNECTION_NAME === connection.name || !connection.name
     ? Connection
     : `${connection.name}Connection`;
+}
+
+/**
+ * This function returns a Connection prefix based on the connection name
+ * @param {Connection | ConnectionOptions | string} [connection='default'] This optional parameter is either
+ * a Connection, or a ConnectionOptions or a string.
+ * @returns {string | Function} The Connection injection token.
+ */
+export function getConnectionPrefix(
+  connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
+): string {
+  if (connection === DEFAULT_CONNECTION_NAME) {
+    return '';
+  }
+  if (typeof connection === 'string') {
+    return connection + '_';
+  }
+  if (connection.name === DEFAULT_CONNECTION_NAME || !connection.name) {
+    return '';
+  }
+  return connection.name + '_';
 }
 
 /**
