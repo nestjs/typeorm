@@ -10,7 +10,7 @@ import { PhotoModule } from './photo/photo.module';
 class ConfigService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
-      type: 'mysql',
+      type: 'postgres',
       host: '0.0.0.0',
       port: 3306,
       username: 'root',
@@ -31,7 +31,7 @@ class ConfigService implements TypeOrmOptionsFactory {
     }),
     TypeOrmModule.forRoot({
       name: 'connection_2',
-      type: 'mysql',
+      type: 'postgres',
       host: '0.0.0.0',
       port: 3306,
       username: 'root',

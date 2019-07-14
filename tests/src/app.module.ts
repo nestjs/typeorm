@@ -6,7 +6,7 @@ import { PhotoModule } from './photo/photo.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'postgres',
       host: '0.0.0.0',
       port: 3306,
       username: 'root',
@@ -20,7 +20,7 @@ import { PhotoModule } from './photo/photo.module';
     PhotoModule,
     TypeOrmModule.forRoot({
       name: 'connection_2',
-      type: 'mysql',
+      type: 'postgres',
       host: '0.0.0.0',
       port: 3306,
       username: 'root',

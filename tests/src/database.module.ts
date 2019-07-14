@@ -10,7 +10,7 @@ export class DatabaseModule {
       module: DatabaseModule,
       imports: [
         TypeOrmModule.forRoot({
-          type: 'mysql',
+          type: 'postgres',
           host: '0.0.0.0',
           port: 3306,
           username: 'root',
@@ -23,7 +23,7 @@ export class DatabaseModule {
         }),
         TypeOrmModule.forRoot({
           name: 'connection_2',
-          type: 'mysql',
+          type: 'postgres',
           host: '0.0.0.0',
           port: 3306,
           username: 'root',

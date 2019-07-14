@@ -10,7 +10,7 @@
     "publish:npm": "npm publish --access public",
     "prepublish:next": "npm run build",
     "publish:next": "npm publish --access public --tag next",
-    "test:integration": "jest --config ./tests/jest-e2e.json"
+    "test:integration": "jest --config ./tests/jest-e2e.json --runInBand"
   },
   "devDependencies": {
     "@nestjs/common": "6.5.2",
@@ -23,6 +23,7 @@
     "jest": "24.8.0",
     "lint-staged": "9.2.0",
     "mysql": "^2.17.1",
+    "pg": "^7.11.0",
     "prettier": "1.18.2",
     "reflect-metadata": "^0.1.12",
     "rxjs": "6.5.2",
