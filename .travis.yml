@@ -24,6 +24,8 @@ jobs:
   include:
     - state: "Test"
       name: "Integration Test"
+      before_script: skip
+      addons: skip
       script:
         sudo service mysql stop &&
         cd tests && docker-compose up -d && cd ../ &&
