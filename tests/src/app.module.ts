@@ -7,7 +7,7 @@ import { PhotoModule } from './photo/photo.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: '0.0.0.0',
       port: 3306,
       username: 'root',
       password: 'root',

@@ -11,7 +11,7 @@ class ConfigService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       type: 'mysql',
-      host: 'localhost',
+      host: '0.0.0.0',
       port: 3306,
       username: 'root',
       password: 'root',
@@ -33,7 +33,7 @@ class ConfigService implements TypeOrmOptionsFactory {
     TypeOrmModule.forRoot({
       name: 'connection_2',
       type: 'mysql',
-      host: 'localhost',
+      host: '0.0.0.0',
       port: 3306,
       username: 'root',
       password: 'root',

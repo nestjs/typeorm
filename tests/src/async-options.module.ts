@@ -8,7 +8,7 @@ import { PhotoModule } from './photo/photo.module';
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'mysql',
-        host: 'localhost',
+        host: '0.0.0.0',
         port: 3306,
         username: 'root',
         password: 'root',
@@ -23,7 +23,7 @@ import { PhotoModule } from './photo/photo.module';
     TypeOrmModule.forRoot({
       name: 'connection_2',
       type: 'mysql',
-      host: 'localhost',
+      host: '0.0.0.0',
       port: 3306,
       username: 'root',
       password: 'root',
