@@ -113,11 +113,12 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
     if (options.useExisting || options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
     }
+    const useClass = options.useClass as Type<TypeOrmOptionsFactory>;
     return [
       this.createAsyncOptionsProvider(options),
       {
-        provide: options.useClass,
-        useClass: options.useClass,
+        provide: useClass,
+        useClass,
       },
     ];
   }
@@ -132,11 +133,15 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
         inject: options.inject || [],
       };
     }
+    // `as Type<TypeOrmOptionsFactory>` is a workaround for microsoft/TypeScript#31603
+    const inject = [
+      (options.useClass || options.useExisting) as Type<TypeOrmOptionsFactory>,
+    ];
     return {
       provide: TYPEORM_MODULE_OPTIONS,
       useFactory: async (optionsFactory: TypeOrmOptionsFactory) =>
         await optionsFactory.createTypeOrmOptions(options.name),
-      inject: [options.useClass || options.useExisting],
+      inject,
     };
   }
 
