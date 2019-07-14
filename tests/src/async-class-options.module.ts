@@ -18,7 +18,6 @@ class ConfigService implements TypeOrmOptionsFactory {
       database: 'test',
       entities: [Photo],
       synchronize: true,
-      keepConnectionAlive: true,
       retryAttempts: 2,
       retryDelay: 1000,
     };
@@ -40,7 +39,6 @@ class ConfigService implements TypeOrmOptionsFactory {
       database: 'test',
       entities: [Photo],
       synchronize: true,
-      keepConnectionAlive: true,
       retryAttempts: 2,
       retryDelay: 1000,
     }),
