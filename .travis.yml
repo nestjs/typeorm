@@ -29,6 +29,7 @@ jobs:
       script:
         sudo service mysql stop &&
         cd tests && docker-compose up -d && cd ../ &&
+        sh tests/wait-for-sql.sh &&
         npm run test:integration
       node_js: 12
 
