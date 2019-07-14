@@ -1,0 +1,34 @@
+language: node_js
+
+cache:
+  directories:
+    - "node_modules"
+
+git:
+  depth: 5
+
+addons:
+  firefox: "latest"
+
+before_script:
+  - export DISPLAY=:99.0
+
+before_install:
+  - npm i -g npm@latest
+
+install:
+  - npm ci
+  - npm run build
+
+jobs:
+  include:
+    - state: "Test"
+      name: "Integration Test"
+      before_script: skip
+      addons: skip
+      script:
+        cd tests && docker-compose up --force-recreate --build -d && cd ../ &&
+        sh tests/wait-for-sql.sh &&
+        npm run test:integration
+      node_js: 12
+

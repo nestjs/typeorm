@@ -13,7 +13,7 @@ import {
   Connection,
   ConnectionOptions,
   createConnection,
-  getConnection,
+  getConnectionManager,
 } from 'typeorm';
 import {
   generateString,
@@ -160,7 +160,14 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
   ): Promise<Connection> {
     try {
       if (options.keepConnectionAlive) {
-        return getConnection(getConnectionName(options as ConnectionOptions));
+        const connectionName = getConnectionName(options as ConnectionOptions);
+        const manager = getConnectionManager();
+        if (manager.has(connectionName)) {
+          const connection = manager.get(connectionName);
+          if (connection.isConnected) {
+            return connection;
+          }
+        }
       }
     } catch {}
 

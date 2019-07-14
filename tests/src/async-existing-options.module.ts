@@ -10,15 +10,14 @@ import { PhotoModule } from './photo/photo.module';
 class ConfigService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
-      type: 'mysql',
-      host: 'localhost',
+      type: 'postgres',
+      host: '0.0.0.0',
       port: 3306,
       username: 'root',
       password: 'root',
       database: 'test',
       entities: [Photo],
       synchronize: true,
-      keepConnectionAlive: true,
       retryAttempts: 2,
       retryDelay: 1000,
     };
@@ -39,15 +38,14 @@ class ConfigModule {}
     }),
     TypeOrmModule.forRoot({
       name: 'connection_2',
-      type: 'mysql',
-      host: 'localhost',
+      type: 'postgres',
+      host: '0.0.0.0',
       port: 3306,
       username: 'root',
       password: 'root',
       database: 'test',
       entities: [Photo],
       synchronize: true,
-      keepConnectionAlive: true,
       retryAttempts: 2,
       retryDelay: 1000,
     }),

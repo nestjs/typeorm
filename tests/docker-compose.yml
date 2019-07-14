@@ -1,11 +1,12 @@
 version: "3"
 
 services:
-  mysql:
-    image: mysql:5.7.26
+  postgres:
+    image: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: test
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: test
     ports:
-      - "3306:3306"
+      - "3306:5432"
     restart: always
