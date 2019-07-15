@@ -24,7 +24,9 @@ jobs:
   include:
     - state: "Test"
       name: "Integration Test"
-      before_script: skip
+      before_script:
+        - sudo /etc/init.d/mysql stop
+        - sudo /etc/init.d/postgresql stop
       addons: skip
       script:
         cd tests && docker-compose up --force-recreate --build -d && cd ../ &&
