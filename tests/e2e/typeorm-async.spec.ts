@@ -2,9 +2,10 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AsyncApplicationModule } from '../src/app-async.module';
+import { Server } from 'http';
 
 describe('TypeOrm (async configuration)', () => {
-  let server;
+  let server: Server;
   let app: INestApplication;
 
   beforeEach(async () => {
