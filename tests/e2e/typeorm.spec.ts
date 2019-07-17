@@ -2,9 +2,10 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 import { ApplicationModule } from '../src/app.module';
+import { Server } from 'http';
 
 describe('TypeOrm', () => {
-  let server;
+  let server: Server;
   let app: INestApplication;
 
   beforeEach(async () => {
