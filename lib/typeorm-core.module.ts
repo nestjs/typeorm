@@ -3,9 +3,9 @@ import {
   Global,
   Inject,
   Module,
-  OnModuleDestroy,
   Provider,
   Type,
+  OnApplicationShutdown,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer } from 'rxjs';
@@ -31,7 +31,7 @@ import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
 
 @Global()
 @Module({})
-export class TypeOrmCoreModule implements OnModuleDestroy {
+export class TypeOrmCoreModule implements OnApplicationShutdown {
   constructor(
     @Inject(TYPEORM_MODULE_OPTIONS)
     private readonly options: TypeOrmModuleOptions,
@@ -98,7 +98,7 @@ export class TypeOrmCoreModule implements OnModuleDestroy {
     };
   }
 
-  async onModuleDestroy() {
+  async onApplicationShutdown() {
     if (this.options.keepConnectionAlive) {
       return;
     }
