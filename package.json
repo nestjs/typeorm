@@ -28,7 +28,7 @@
     "pg": "7.12.1",
     "prettier": "1.18.2",
     "reflect-metadata": "0.1.12",
-    "rxjs": "6.5.2",
+    "rxjs": "6.5.3",
     "rxjs-compat": "6.5.3",
     "supertest": "4.0.2",
     "ts-jest": "24.0.2",
