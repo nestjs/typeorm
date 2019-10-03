@@ -21,7 +21,7 @@
     "@types/node": "7.10.7",
     "@types/supertest": "2.0.8",
     "@types/uuid": "3.4.5",
-    "husky": "3.0.5",
+    "husky": "3.0.8",
     "jest": "24.9.0",
     "lint-staged": "9.4.1",
     "mysql": "2.17.1",
