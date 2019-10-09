@@ -4,6 +4,7 @@
   "description": "Nest - modern, fast, powerful node.js web framework (@typeorm)",
   "author": "Kamil Mysliwiec",
   "license": "MIT",
+  "url": "https://github.com/nestjs/typeorm#readme",
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.json",
     "prepublish:npm": "npm run build",
@@ -55,5 +56,9 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nestjs/typeorm"
   }
 }
