@@ -33,7 +33,7 @@
     "rxjs-compat": "6.5.3",
     "supertest": "4.0.2",
     "ts-jest": "24.2.0",
-    "typeorm": "0.2.20",
+    "typeorm": "0.2.21",
     "typescript": "3.7.3"
   },
   "dependencies": {
