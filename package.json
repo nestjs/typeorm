@@ -4,6 +4,7 @@
   "description": "Nest - modern, fast, powerful node.js web framework (@typeorm)",
   "author": "Kamil Mysliwiec",
   "license": "MIT",
+  "url": "https://github.com/nestjs/typeorm#readme",
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.json",
     "prepublish:npm": "npm run build",
@@ -13,27 +14,27 @@
     "test:integration": "jest --config ./tests/jest-e2e.json --runInBand"
   },
   "devDependencies": {
-    "@nestjs/common": "6.8.0",
-    "@nestjs/core": "6.8.0",
-    "@nestjs/platform-express": "6.8.0",
-    "@nestjs/testing": "6.8.0",
-    "@types/jest": "24.0.18",
-    "@types/node": "7.10.7",
+    "@nestjs/common": "6.10.6",
+    "@nestjs/core": "6.10.6",
+    "@nestjs/platform-express": "6.10.6",
+    "@nestjs/testing": "6.10.6",
+    "@types/jest": "24.0.23",
+    "@types/node": "7.10.8",
     "@types/supertest": "2.0.8",
-    "@types/uuid": "3.4.5",
-    "husky": "3.0.8",
+    "@types/uuid": "3.4.6",
+    "husky": "3.1.0",
     "jest": "24.9.0",
-    "lint-staged": "9.4.1",
+    "lint-staged": "9.5.0",
     "mysql": "2.17.1",
-    "pg": "7.12.1",
-    "prettier": "1.18.2",
+    "pg": "7.14.0",
+    "prettier": "1.19.1",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.3",
     "rxjs-compat": "6.5.3",
     "supertest": "4.0.2",
-    "ts-jest": "24.1.0",
-    "typeorm": "0.2.19",
-    "typescript": "3.6.3"
+    "ts-jest": "24.2.0",
+    "typeorm": "0.2.21",
+    "typescript": "3.7.3"
   },
   "dependencies": {
     "uuid": "3.3.3"
@@ -55,5 +56,9 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nestjs/typeorm"
   }
 }
