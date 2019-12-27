@@ -30,7 +30,7 @@
     "prettier": "1.19.1",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.4",
-    "rxjs-compat": "6.5.3",
+    "rxjs-compat": "6.5.4",
     "supertest": "4.0.2",
     "ts-jest": "24.2.0",
     "typeorm": "0.2.22",
