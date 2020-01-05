@@ -14,10 +14,10 @@
     "test:integration": "jest --config ./tests/jest-e2e.json --runInBand"
   },
   "devDependencies": {
-    "@nestjs/common": "6.10.13",
-    "@nestjs/core": "6.10.13",
-    "@nestjs/platform-express": "6.10.13",
-    "@nestjs/testing": "6.10.13",
+    "@nestjs/common": "6.10.14",
+    "@nestjs/core": "6.10.14",
+    "@nestjs/platform-express": "6.10.14",
+    "@nestjs/testing": "6.10.14",
     "@types/jest": "24.0.25",
     "@types/node": "7.10.8",
     "@types/supertest": "2.0.8",
