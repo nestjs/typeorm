@@ -23,7 +23,7 @@
     "@types/supertest": "2.0.8",
     "@types/uuid": "3.4.6",
     "husky": "4.2.0",
-    "jest": "24.9.0",
+    "jest": "25.1.0",
     "lint-staged": "10.0.1",
     "mysql": "2.18.0",
     "pg": "7.17.1",
