@@ -21,7 +21,7 @@
     "@types/jest": "25.1.0",
     "@types/node": "7.10.8",
     "@types/supertest": "2.0.8",
-    "@types/uuid": "3.4.6",
+    "@types/uuid": "3.4.7",
     "husky": "4.2.1",
     "jest": "25.1.0",
     "lint-staged": "10.0.3",
