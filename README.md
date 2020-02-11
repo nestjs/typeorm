@@ -26,7 +26,7 @@
 
 ## Description
 
-The [TypeORM](http://typeorm.io) module for [Nest](https://github.com/nestjs/nest).
+[TypeORM](http://typeorm.io) module for [Nest](https://github.com/nestjs/nest).
 
 ## Installation
 
@@ -44,7 +44,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 ## Stay in touch
 
-* Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+* Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
 * Website - [https://nestjs.com](https://nestjs.com/)
 * Twitter - [@nestframework](https://twitter.com/nestframework)
 
