@@ -5,12 +5,12 @@ import { ConnectionOptions } from 'typeorm';
 export type TypeOrmModuleOptions = {
   /**
    * Number of times to retry connecting
-   * Default: `0`
+   * Default: 10
    */
   retryAttempts?: number;
   /**
    * Delay between connection retry attempts (ms)
-   * Default: `0`
+   * Default: 3000
    */
   retryDelay?: number;
   /**
