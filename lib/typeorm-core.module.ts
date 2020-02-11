@@ -3,9 +3,9 @@ import {
   Global,
   Inject,
   Module,
+  OnApplicationShutdown,
   Provider,
   Type,
-  OnApplicationShutdown,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer } from 'rxjs';
@@ -22,12 +22,17 @@ import {
   getEntityManagerToken,
   handleRetry,
 } from './common/typeorm.utils';
+import { EntitiesMetadataStorage } from './entities-metadata.storage';
 import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
 } from './interfaces/typeorm-options.interface';
-import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
+import {
+  DEFAULT_CONNECTION_NAME,
+  TYPEORM_MODULE_ID,
+  TYPEORM_MODULE_OPTIONS,
+} from './typeorm.constants';
 
 @Global()
 @Module({})
@@ -102,8 +107,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     if (this.options.keepConnectionAlive) {
       return;
     }
-    const connection = this.moduleRef.get<Connection>(getConnectionToken(this
-      .options as ConnectionOptions) as Type<Connection>);
+    const connection = this.moduleRef.get<Connection>(
+      getConnectionToken(this.options as ConnectionOptions) as Type<Connection>,
+    );
     connection && (await connection.close());
   }
 
@@ -171,11 +177,30 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       }
     } catch {}
 
-    return await defer(() =>
-      options.type
-        ? createConnection(options as ConnectionOptions)
-        : createConnection(),
-    )
+    return await defer(() => {
+      if (!options.type) {
+        return createConnection();
+      }
+      if (!options.autoLoadEntities) {
+        return createConnection(options as ConnectionOptions);
+      }
+
+      const connectionToken = options.name || DEFAULT_CONNECTION_NAME;
+      let entities = options.entities;
+      if (entities) {
+        entities = entities.concat(
+          EntitiesMetadataStorage.getEntitiesByConnection(connectionToken),
+        );
+      } else {
+        entities = EntitiesMetadataStorage.getEntitiesByConnection(
+          connectionToken,
+        );
+      }
+      return createConnection({
+        ...options,
+        entities,
+      } as ConnectionOptions);
+    })
       .pipe(handleRetry(options.retryAttempts, options.retryDelay))
       .toPromise();
   }
