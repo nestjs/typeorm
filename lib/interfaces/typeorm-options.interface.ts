@@ -3,10 +3,24 @@ import { ModuleMetadata } from '@nestjs/common/interfaces';
 import { ConnectionOptions } from 'typeorm';
 
 export type TypeOrmModuleOptions = {
+  /**
+   * Number of times to retry connecting
+   * Default: `0`
+   */
   retryAttempts?: number;
+  /**
+   * Delay between connection retry attempts (ms)
+   * Default: `0`
+   */
   retryDelay?: number;
-  keepConnectionAlive?: boolean;
+  /**
+   * If `true`, entities will be loaded automatically.
+   */
   autoLoadEntities?: boolean;
+  /**
+   * If `true`, connection will not be closed on application shutdown.
+   */
+  keepConnectionAlive?: boolean;
 } & Partial<ConnectionOptions>;
 
 export interface TypeOrmOptionsFactory {
