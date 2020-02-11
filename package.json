@@ -13,8 +13,8 @@
     "publish:npm": "npm publish --access public",
     "prepublish:next": "npm run build",
     "publish:next": "npm publish --access public --tag next",
-    "test:integration": "jest --config ./tests/jest-e2e.json --runInBand",
-    "test:integration:dev": "jest --config ./tests/jest-e2e.json --runInBand --watch",
+    "test:e2e": "jest --config ./tests/jest-e2e.json --runInBand",
+    "test:e2e:dev": "jest --config ./tests/jest-e2e.json --runInBand --watch",
     "prerelease": "npm run build",
     "release": "release-it"
   },

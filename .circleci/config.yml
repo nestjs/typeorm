@@ -69,7 +69,7 @@ jobs:
           command: docker ps
       - run:
           name: e2e tests
-          command: npm run test:integration
+          command: npm run test:e2e
 
 workflows:
   version: 2
