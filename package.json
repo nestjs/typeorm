@@ -40,7 +40,7 @@
     "mysql": "2.18.1",
     "pg": "7.18.1",
     "prettier": "1.19.1",
-    "release-it": "12.4.3",
+    "release-it": "12.5.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.4",
     "rxjs-compat": "6.5.4",
