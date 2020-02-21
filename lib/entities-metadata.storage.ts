@@ -1,4 +1,5 @@
-import { Connection, ConnectionOptions } from 'typeorm';
+import { Connection } from 'typeorm/connection/Connection';
+import { ConnectionOptions } from 'typeorm/connection/ConnectionOptions';
 
 type ConnectionToken = Connection | ConnectionOptions | string;
 

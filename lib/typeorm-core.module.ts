@@ -9,12 +9,9 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer } from 'rxjs';
-import {
-  Connection,
-  ConnectionOptions,
-  createConnection,
-  getConnectionManager,
-} from 'typeorm';
+import { createConnection, getConnectionManager } from 'typeorm';
+import { Connection } from 'typeorm/connection/Connection';
+import { ConnectionOptions } from 'typeorm/connection/ConnectionOptions';
 import {
   generateString,
   getConnectionName,

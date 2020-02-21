@@ -1,13 +1,11 @@
 import { Logger, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
-import {
-  AbstractRepository,
-  Connection,
-  ConnectionOptions,
-  EntityManager,
-  Repository,
-} from 'typeorm';
+import { Connection } from 'typeorm/connection/Connection';
+import { ConnectionOptions } from 'typeorm/connection/ConnectionOptions';
+import { EntityManager } from 'typeorm/entity-manager/EntityManager';
+import { AbstractRepository } from 'typeorm/repository/AbstractRepository';
+import { Repository } from 'typeorm/repository/Repository';
 import { isNullOrUndefined } from 'util';
 import * as uuid from 'uuid/v4';
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
