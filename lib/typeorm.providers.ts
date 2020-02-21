@@ -1,8 +1,10 @@
 import { Provider } from '@nestjs/common';
-import { Connection } from 'typeorm/connection/Connection';
-import { ConnectionOptions } from 'typeorm/connection/ConnectionOptions';
-import { AbstractRepository } from 'typeorm/repository/AbstractRepository';
-import { Repository } from 'typeorm/repository/Repository';
+import {
+  AbstractRepository,
+  Connection,
+  ConnectionOptions,
+  Repository,
+} from 'typeorm';
 import { getConnectionToken, getRepositoryToken } from './common/typeorm.utils';
 
 export function createTypeOrmProviders(

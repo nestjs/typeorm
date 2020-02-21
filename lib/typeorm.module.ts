@@ -1,6 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { Connection } from 'typeorm/connection/Connection';
-import { ConnectionOptions } from 'typeorm/connection/ConnectionOptions';
+import { Connection, ConnectionOptions } from 'typeorm';
 import { EntitiesMetadataStorage } from './entities-metadata.storage';
 import {
   TypeOrmModuleAsyncOptions,

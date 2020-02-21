@@ -1,6 +1,6 @@
 import { Type } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { ConnectionOptions } from 'typeorm/connection/ConnectionOptions';
+import { ConnectionOptions } from 'typeorm';
 
 export type TypeOrmModuleOptions = {
   /**

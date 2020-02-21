@@ -1,6 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Connection } from 'typeorm/connection/Connection';
-import { ConnectionOptions } from 'typeorm/connection/ConnectionOptions';
+import { Connection, ConnectionOptions } from 'typeorm';
 import { DEFAULT_CONNECTION_NAME } from '../typeorm.constants';
 import {
   getConnectionToken,
