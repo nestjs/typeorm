@@ -11,3 +11,9 @@ tsconfig.json
 .github
 CONTRIBUTING.md
 renovate.json
+
+# misc
+.commitlintrc.json
+.release-it.json
+.eslintignore
+.eslintrc.js
