@@ -9,7 +9,7 @@ import {
   Repository,
 } from 'typeorm';
 import { isNullOrUndefined } from 'util';
-import * as uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 import { DEFAULT_CONNECTION_NAME } from '../typeorm.constants';
 

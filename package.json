@@ -28,7 +28,7 @@
     "@types/jest": "25.1.4",
     "@types/node": "7.10.8",
     "@types/supertest": "2.0.8",
-    "@types/uuid": "3.4.7",
+    "@types/uuid": "^7.0.0",
     "@typescript-eslint/eslint-plugin": "2.23.0",
     "@typescript-eslint/parser": "2.23.0",
     "eslint": "6.8.0",
@@ -40,8 +40,8 @@
     "mysql": "2.18.1",
     "pg": "7.18.2",
     "prettier": "1.19.1",
-    "release-it": "13.0.2",
     "reflect-metadata": "0.1.13",
+    "release-it": "13.0.2",
     "rxjs": "6.5.4",
     "rxjs-compat": "6.5.4",
     "supertest": "4.0.2",
@@ -50,7 +50,7 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
-    "uuid": "3.4.0"
+    "uuid": "^7.0.2"
   },
   "peerDependencies": {
     "@nestjs/common": "^6.7.0",
