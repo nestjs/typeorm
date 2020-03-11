@@ -18,12 +18,12 @@ export function createTypeOrmProviders(
         entity.prototype instanceof Repository ||
         entity.prototype instanceof AbstractRepository
       ) {
-        return connection.getCustomRepository(entity) as any;
+        return connection.getCustomRepository(entity);
       }
 
       return connection.options.type === 'mongodb'
-        ? (connection.getMongoRepository(entity) as any)
-        : (connection.getRepository(entity) as any);
+        ? connection.getMongoRepository(entity)
+        : connection.getRepository(entity);
     },
     inject: [getConnectionToken(connection)],
   }));
