@@ -28,7 +28,7 @@
     "@types/jest": "25.1.4",
     "@types/node": "7.10.8",
     "@types/supertest": "2.0.8",
-    "@types/uuid": "^7.0.0",
+    "@types/uuid": "7.0.0",
     "@typescript-eslint/eslint-plugin": "2.23.0",
     "@typescript-eslint/parser": "2.23.0",
     "eslint": "6.8.0",
@@ -50,7 +50,7 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
-    "uuid": "^7.0.2"
+    "uuid": "7.0.2"
   },
   "peerDependencies": {
     "@nestjs/common": "^6.7.0",
