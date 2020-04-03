@@ -42,7 +42,7 @@
     "prettier": "2.0.2",
     "reflect-metadata": "0.1.13",
     "release-it": "13.5.1",
-    "rxjs": "6.5.4",
+    "rxjs": "6.5.5",
     "rxjs-compat": "6.5.4",
     "supertest": "4.0.2",
     "ts-jest": "25.3.0",
