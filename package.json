@@ -50,7 +50,7 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
-    "uuid": "7.0.2"
+    "uuid": "7.0.3"
   },
   "peerDependencies": {
     "@nestjs/common": "^6.7.0 || ^7.0.0",
