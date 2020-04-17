@@ -45,7 +45,7 @@
     "rxjs": "6.5.5",
     "rxjs-compat": "6.5.5",
     "supertest": "4.0.2",
-    "ts-jest": "25.3.1",
+    "ts-jest": "25.4.0",
     "typeorm": "0.2.24",
     "typescript": "3.8.3"
   },
