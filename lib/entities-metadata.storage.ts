@@ -1,13 +1,14 @@
 import { Connection, ConnectionOptions } from 'typeorm';
+import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
 
 type ConnectionToken = Connection | ConnectionOptions | string;
 
 export class EntitiesMetadataStorage {
-  private static readonly storage = new Map<string, Function[]>();
+  private static readonly storage = new Map<string, EntityClassOrSchema[]>();
 
   static addEntitiesByConnection(
     connection: ConnectionToken,
-    entities: Function[],
+    entities: EntityClassOrSchema[],
   ) {
     const connectionToken =
       typeof connection === 'string' ? connection : connection.name;
@@ -20,7 +21,7 @@ export class EntitiesMetadataStorage {
       collection = [];
       this.storage.set(connectionToken, collection);
     }
-    entities.forEach(entity => {
+    entities.forEach((entity) => {
       if (collection!.includes(entity)) {
         return;
       }
@@ -28,7 +29,9 @@ export class EntitiesMetadataStorage {
     });
   }
 
-  static getEntitiesByConnection(connection: ConnectionToken): Function[] {
+  static getEntitiesByConnection(
+    connection: ConnectionToken,
+  ): EntityClassOrSchema[] {
     const connectionToken =
       typeof connection === 'string' ? connection : connection.name;
 

@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { Connection, ConnectionOptions } from 'typeorm';
+import { Connection, ConnectionOptions, EntitySchema } from 'typeorm';
 import { EntitiesMetadataStorage } from './entities-metadata.storage';
+import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
 import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
@@ -19,7 +20,7 @@ export class TypeOrmModule {
   }
 
   static forFeature(
-    entities: Function[] = [],
+    entities: EntityClassOrSchema[] = [],
     connection:
       | Connection
       | ConnectionOptions
