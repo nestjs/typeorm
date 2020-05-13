@@ -117,7 +117,7 @@ export function handleRetry(
         e.pipe(
           scan((errorCount, error: Error) => {
             logger.error(
-              `Unable to connect to the database. Retrying (${errorCount +
+              `Unable to connect to the database. Message: ${error.message}. Retrying (${errorCount +
                 1})...`,
               error.stack,
             );
