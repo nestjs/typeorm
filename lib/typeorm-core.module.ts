@@ -177,6 +177,8 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       }
     } catch {}
 
+    const connectionToken = options.name || DEFAULT_CONNECTION_NAME;
+
     return await defer(() => {
       if (!options.type) {
         return createConnection();
@@ -185,7 +187,6 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         return createConnection(options as ConnectionOptions);
       }
 
-      const connectionToken = options.name || DEFAULT_CONNECTION_NAME;
       let entities = options.entities;
       if (entities) {
         entities = entities.concat(
@@ -201,7 +202,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         entities,
       } as ConnectionOptions);
     })
-      .pipe(handleRetry(options.retryAttempts, options.retryDelay))
+      .pipe(
+        handleRetry(options.retryAttempts, options.retryDelay, connectionToken),
+      )
       .toPromise();
   }
 }
