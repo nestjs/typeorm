@@ -11,12 +11,13 @@ export function createTypeOrmProviders(
   entities?: Function[],
   connection?: Connection | ConnectionOptions | string,
 ): Provider[] {
-  return (entities || []).map(entity => ({
+  return (entities || []).map((entity) => ({
     provide: getRepositoryToken(entity, connection),
     useFactory: (connection: Connection) => {
       if (
-        entity.prototype instanceof Repository ||
-        entity.prototype instanceof AbstractRepository
+        typeof Repository === 'function' &&
+        (entity.prototype instanceof Repository ||
+          entity.prototype instanceof AbstractRepository)
       ) {
         return connection.getCustomRepository(entity);
       }
