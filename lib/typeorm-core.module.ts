@@ -28,11 +28,7 @@ import {
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
 } from './interfaces/typeorm-options.interface';
-import {
-  DEFAULT_CONNECTION_NAME,
-  TYPEORM_MODULE_ID,
-  TYPEORM_MODULE_OPTIONS,
-} from './typeorm.constants';
+import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
 
 @Global()
 @Module({})
@@ -177,8 +173,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       }
     } catch {}
 
-    const connectionToken = options.name || DEFAULT_CONNECTION_NAME;
-
+    const connectionToken = getConnectionName(options as ConnectionOptions);
     return await defer(() => {
       if (!options.type) {
         return createConnection();
