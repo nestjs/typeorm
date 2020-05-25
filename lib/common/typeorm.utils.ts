@@ -110,6 +110,7 @@ export function getEntityManagerToken(
 export function handleRetry(
   retryAttempts = 9,
   retryDelay = 3000,
+  connectionName = DEFAULT_CONNECTION_NAME,
   verboseRetryLog = false,
 ): <T>(source: Observable<T>) => Observable<T> {
   return <T>(source: Observable<T>) =>
@@ -117,14 +118,19 @@ export function handleRetry(
       retryWhen((e) =>
         e.pipe(
           scan((errorCount, error: Error) => {
-            const message = verboseRetryLog
-              ? `Unable to connect to the database. Message: ${
-                  error.message
-                }. Retrying (${errorCount + 1})...`
-              : `Unable to connect to the database. Retrying (${
-                  errorCount + 1
-                })...`;
-            logger.error(message, error.stack);
+            const connectionInfo =
+              connectionName === DEFAULT_CONNECTION_NAME
+                ? ''
+                : ` (${connectionName})`;
+            const verboseMessage = verboseRetryLog
+              ? ` Message: ${error.message}.`
+              : '';
+            logger.error(
+              `Unable to connect to the database${connectionInfo}.${verboseMessage} Retrying (${
+                errorCount + 1
+              })...`,
+              error.stack,
+            );
             if (errorCount + 1 >= retryAttempts) {
               throw error;
             }
