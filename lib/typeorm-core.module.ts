@@ -28,11 +28,7 @@ import {
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
 } from './interfaces/typeorm-options.interface';
-import {
-  DEFAULT_CONNECTION_NAME,
-  TYPEORM_MODULE_ID,
-  TYPEORM_MODULE_OPTIONS,
-} from './typeorm.constants';
+import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
 
 @Global()
 @Module({})
@@ -177,6 +173,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       }
     } catch {}
 
+    const connectionToken = getConnectionName(options as ConnectionOptions);
     return await defer(() => {
       if (!options.type) {
         return createConnection();
@@ -185,7 +182,6 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         return createConnection(options as ConnectionOptions);
       }
 
-      const connectionToken = options.name || DEFAULT_CONNECTION_NAME;
       let entities = options.entities;
       if (entities) {
         entities = entities.concat(
@@ -201,7 +197,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         entities,
       } as ConnectionOptions);
     })
-      .pipe(handleRetry(options.retryAttempts, options.retryDelay))
+      .pipe(
+        handleRetry(options.retryAttempts, options.retryDelay, connectionToken),
+      )
       .toPromise();
   }
 }
