@@ -21,22 +21,22 @@
   "devDependencies": {
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-angular": "8.3.4",
-    "@nestjs/common": "7.0.13",
-    "@nestjs/core": "7.0.13",
-    "@nestjs/platform-express": "7.0.13",
-    "@nestjs/testing": "7.0.13",
+    "@nestjs/common": "7.1.0",
+    "@nestjs/core": "7.1.0",
+    "@nestjs/platform-express": "7.1.0",
+    "@nestjs/testing": "7.1.0",
     "@types/jest": "25.2.3",
     "@types/node": "7.10.8",
     "@types/supertest": "2.0.9",
-    "@types/uuid": "7.0.3",
-    "@typescript-eslint/eslint-plugin": "2.34.0",
-    "@typescript-eslint/parser": "2.34.0",
-    "eslint": "7.0.0",
+    "@types/uuid": "8.0.0",
+    "@typescript-eslint/eslint-plugin": "3.0.0",
+    "@typescript-eslint/parser": "3.0.0",
+    "eslint": "7.1.0",
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-import": "2.20.2",
     "husky": "4.2.5",
     "jest": "26.0.1",
-    "lint-staged": "10.2.4",
+    "lint-staged": "10.2.6",
     "mysql": "2.18.1",
     "pg": "8.2.1",
     "prettier": "2.0.5",
@@ -50,7 +50,7 @@
     "typescript": "3.9.3"
   },
   "dependencies": {
-    "uuid": "7.0.3"
+    "uuid": "8.1.0"
   },
   "peerDependencies": {
     "@nestjs/common": "^6.7.0 || ^7.0.0",
