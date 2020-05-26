@@ -198,7 +198,12 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       } as ConnectionOptions);
     })
       .pipe(
-        handleRetry(options.retryAttempts, options.retryDelay, connectionToken),
+        handleRetry(
+          options.retryAttempts,
+          options.retryDelay,
+          connectionToken,
+          options.verboseRetryLog,
+        ),
       )
       .toPromise();
   }
