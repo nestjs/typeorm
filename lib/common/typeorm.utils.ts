@@ -115,7 +115,7 @@ export function handleRetry(
 ): <T>(source: Observable<T>) => Observable<T> {
   return <T>(source: Observable<T>) =>
     source.pipe(
-      retryWhen((e) =>
+      retryWhen(e =>
         e.pipe(
           scan((errorCount, error: Error) => {
             const connectionInfo =
@@ -125,10 +125,10 @@ export function handleRetry(
             const verboseMessage = verboseRetryLog
               ? ` Message: ${error.message}.`
               : '';
+
             logger.error(
-              `Unable to connect to the database${connectionInfo}.${verboseMessage} Retrying (${
-                errorCount + 1
-              })...`,
+              `Unable to connect to the database${connectionInfo}.${verboseMessage} Retrying (${errorCount +
+                1})...`,
               error.stack,
             );
             if (errorCount + 1 >= retryAttempts) {
