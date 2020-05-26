@@ -1,4 +1,5 @@
 {
   "trailingComma": "all",
+  "arrowParens": "always",
   "singleQuote": true
 }
