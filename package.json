@@ -47,7 +47,7 @@
     "supertest": "4.0.2",
     "ts-jest": "26.1.0",
     "typeorm": "0.2.25",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   },
   "dependencies": {
     "uuid": "8.1.0"
