@@ -43,7 +43,7 @@
     "reflect-metadata": "0.1.13",
     "release-it": "13.6.6",
     "rxjs": "6.6.2",
-    "rxjs-compat": "6.6.0",
+    "rxjs-compat": "6.6.2",
     "supertest": "4.0.2",
     "ts-jest": "26.1.4",
     "typeorm": "0.2.25",
