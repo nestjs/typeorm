@@ -1,5 +1,12 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { Connection, ConnectionOptions, EntitySchema } from 'typeorm';
+import {
+  AbstractRepository,
+  Connection,
+  ConnectionOptions,
+  EntitySchema,
+  getMetadataArgsStorage,
+  Repository,
+} from 'typeorm';
 import { EntitiesMetadataStorage } from './entities-metadata.storage';
 import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
 import {
@@ -27,7 +34,36 @@ export class TypeOrmModule {
       | string = DEFAULT_CONNECTION_NAME,
   ): DynamicModule {
     const providers = createTypeOrmProviders(entities, connection);
-    EntitiesMetadataStorage.addEntitiesByConnection(connection, entities);
+    let repEntities = [];
+    for (let entity of entities) {
+      if (
+        entity instanceof Function &&
+        (entity.prototype instanceof Repository ||
+          entity.prototype instanceof AbstractRepository)
+      ) {
+        const entityRepositoryMetadataArgs = getMetadataArgsStorage().entityRepositories.find(
+          (repository) => {
+            return (
+              repository.target ===
+              (entity instanceof Function
+                ? entity
+                : (entity as any).constructor)
+            );
+          },
+        );
+        if (entityRepositoryMetadataArgs) {
+          if (
+            entities.indexOf(<any>entityRepositoryMetadataArgs.entity) === -1
+          ) {
+            repEntities.push(entityRepositoryMetadataArgs.entity);
+          }
+        }
+      }
+    }
+    EntitiesMetadataStorage.addEntitiesByConnection(connection, [
+      ...entities,
+      ...repEntities,
+    ]);
     return {
       module: TypeOrmModule,
       providers: providers,
