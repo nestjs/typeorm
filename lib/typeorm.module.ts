@@ -34,7 +34,7 @@ export class TypeOrmModule {
       | string = DEFAULT_CONNECTION_NAME,
   ): DynamicModule {
     const providers = createTypeOrmProviders(entities, connection);
-    let repEntities = [];
+    let customRepositoryEntities = [];
     for (let entity of entities) {
       if (
         entity instanceof Function &&
@@ -55,14 +55,14 @@ export class TypeOrmModule {
           if (
             entities.indexOf(<any>entityRepositoryMetadataArgs.entity) === -1
           ) {
-            repEntities.push(entityRepositoryMetadataArgs.entity);
+            customRepositoryEntities.push(entityRepositoryMetadataArgs.entity);
           }
         }
       }
     }
     EntitiesMetadataStorage.addEntitiesByConnection(connection, [
       ...entities,
-      ...repEntities,
+      ...customRepositoryEntities,
     ]);
     return {
       module: TypeOrmModule,
