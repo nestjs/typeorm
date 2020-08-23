@@ -1,11 +1,14 @@
-import {DynamicModule, Module} from '@nestjs/common';
-import {Connection, ConnectionOptions,} from 'typeorm';
-import {EntitiesMetadataStorage} from './entities-metadata.storage';
-import {EntityClassOrSchema} from './interfaces/entity-class-or-schema.type';
-import {TypeOrmModuleAsyncOptions, TypeOrmModuleOptions,} from './interfaces/typeorm-options.interface';
-import {TypeOrmCoreModule} from './typeorm-core.module';
-import {DEFAULT_CONNECTION_NAME} from './typeorm.constants';
-import {createTypeOrmProviders} from './typeorm.providers';
+import { DynamicModule, Module } from '@nestjs/common';
+import { Connection, ConnectionOptions, EntitySchema } from 'typeorm';
+import { EntitiesMetadataStorage } from './entities-metadata.storage';
+import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
+import {
+  TypeOrmModuleAsyncOptions,
+  TypeOrmModuleOptions,
+} from './interfaces/typeorm-options.interface';
+import { TypeOrmCoreModule } from './typeorm-core.module';
+import { DEFAULT_CONNECTION_NAME } from './typeorm.constants';
+import { createTypeOrmProviders } from './typeorm.providers';
 import {getCustomRepositoryEntity} from "./typeorm.custom.repository";
 
 @Module({})
