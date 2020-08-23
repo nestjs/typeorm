@@ -1,21 +1,12 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import {
-  AbstractRepository,
-  Connection,
-  ConnectionOptions,
-  EntitySchema,
-  getMetadataArgsStorage,
-  Repository,
-} from 'typeorm';
-import { EntitiesMetadataStorage } from './entities-metadata.storage';
-import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
-import {
-  TypeOrmModuleAsyncOptions,
-  TypeOrmModuleOptions,
-} from './interfaces/typeorm-options.interface';
-import { TypeOrmCoreModule } from './typeorm-core.module';
-import { DEFAULT_CONNECTION_NAME } from './typeorm.constants';
-import { createTypeOrmProviders } from './typeorm.providers';
+import {DynamicModule, Module} from '@nestjs/common';
+import {Connection, ConnectionOptions,} from 'typeorm';
+import {EntitiesMetadataStorage} from './entities-metadata.storage';
+import {EntityClassOrSchema} from './interfaces/entity-class-or-schema.type';
+import {TypeOrmModuleAsyncOptions, TypeOrmModuleOptions,} from './interfaces/typeorm-options.interface';
+import {TypeOrmCoreModule} from './typeorm-core.module';
+import {DEFAULT_CONNECTION_NAME} from './typeorm.constants';
+import {createTypeOrmProviders} from './typeorm.providers';
+import {getCustomRepositoryEntity} from "./typeorm.custom.repository";
 
 @Module({})
 export class TypeOrmModule {
@@ -34,32 +25,7 @@ export class TypeOrmModule {
       | string = DEFAULT_CONNECTION_NAME,
   ): DynamicModule {
     const providers = createTypeOrmProviders(entities, connection);
-    let customRepositoryEntities = [];
-    for (let entity of entities) {
-      if (
-        entity instanceof Function &&
-        (entity.prototype instanceof Repository ||
-          entity.prototype instanceof AbstractRepository)
-      ) {
-        const entityRepositoryMetadataArgs = getMetadataArgsStorage().entityRepositories.find(
-          (repository) => {
-            return (
-              repository.target ===
-              (entity instanceof Function
-                ? entity
-                : (entity as any).constructor)
-            );
-          },
-        );
-        if (entityRepositoryMetadataArgs) {
-          if (
-            entities.indexOf(<any>entityRepositoryMetadataArgs.entity) === -1
-          ) {
-            customRepositoryEntities.push(entityRepositoryMetadataArgs.entity);
-          }
-        }
-      }
-    }
+    let customRepositoryEntities = getCustomRepositoryEntity(entities);
     EntitiesMetadataStorage.addEntitiesByConnection(connection, [
       ...entities,
       ...customRepositoryEntities,
