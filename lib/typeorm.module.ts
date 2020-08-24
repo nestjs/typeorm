@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { Connection, ConnectionOptions, EntitySchema } from 'typeorm';
+import { Connection, ConnectionOptions } from 'typeorm';
 import { EntitiesMetadataStorage } from './entities-metadata.storage';
+import { getCustomRepositoryEntity } from './helpers/get-custom-repository-entity';
 import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
 import {
   TypeOrmModuleAsyncOptions,
@@ -27,7 +28,11 @@ export class TypeOrmModule {
       | string = DEFAULT_CONNECTION_NAME,
   ): DynamicModule {
     const providers = createTypeOrmProviders(entities, connection);
-    EntitiesMetadataStorage.addEntitiesByConnection(connection, entities);
+    const customRepositoryEntities = getCustomRepositoryEntity(entities);
+    EntitiesMetadataStorage.addEntitiesByConnection(connection, [
+      ...entities,
+      ...customRepositoryEntities,
+    ]);
     return {
       module: TypeOrmModule,
       providers: providers,
