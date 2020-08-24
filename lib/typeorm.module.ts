@@ -9,6 +9,7 @@ import {
 import { TypeOrmCoreModule } from './typeorm-core.module';
 import { DEFAULT_CONNECTION_NAME } from './typeorm.constants';
 import { createTypeOrmProviders } from './typeorm.providers';
+import {getCustomRepositoryEntity} from "./typeorm.custom.repository";
 
 @Module({})
 export class TypeOrmModule {
@@ -27,7 +28,11 @@ export class TypeOrmModule {
       | string = DEFAULT_CONNECTION_NAME,
   ): DynamicModule {
     const providers = createTypeOrmProviders(entities, connection);
-    EntitiesMetadataStorage.addEntitiesByConnection(connection, entities);
+    let customRepositoryEntities = getCustomRepositoryEntity(entities);
+    EntitiesMetadataStorage.addEntitiesByConnection(connection, [
+      ...entities,
+      ...customRepositoryEntities,
+    ]);
     return {
       module: TypeOrmModule,
       providers: providers,
