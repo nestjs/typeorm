@@ -203,6 +203,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           options.retryDelay,
           connectionToken,
           options.verboseRetryLog,
+          options.toRetry,
         ),
       )
       .toPromise();

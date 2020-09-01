@@ -121,12 +121,16 @@ export function handleRetry(
   retryDelay = 3000,
   connectionName = DEFAULT_CONNECTION_NAME,
   verboseRetryLog = false,
+  toRetry?: (err: any) => boolean,
 ): <T>(source: Observable<T>) => Observable<T> {
   return <T>(source: Observable<T>) =>
     source.pipe(
       retryWhen((e) =>
         e.pipe(
           scan((errorCount, error: Error) => {
+            if (toRetry && !toRetry(error)) {
+              throw error;
+            }
             const connectionInfo =
               connectionName === DEFAULT_CONNECTION_NAME
                 ? ''
