@@ -14,6 +14,14 @@ export type TypeOrmModuleOptions = {
    */
   retryDelay?: number;
   /**
+   * Function that determines whether the module should
+   * attempt to connect upon failure.
+   *
+   * @param err error that was thrown
+   * @returns whether to retry connection or not
+   */
+  toRetry?: (err: any) => boolean;
+  /**
    * If `true`, entities will be loaded automatically.
    */
   autoLoadEntities?: boolean;
