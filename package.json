@@ -31,7 +31,7 @@
     "@types/uuid": "8.3.0",
     "@typescript-eslint/eslint-plugin": "4.2.0",
     "@typescript-eslint/parser": "4.2.0",
-    "eslint": "7.9.0",
+    "eslint": "7.10.0",
     "eslint-config-prettier": "6.12.0",
     "eslint-plugin-import": "2.22.0",
     "husky": "4.3.0",
