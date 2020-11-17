@@ -112,7 +112,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     try {
       connection && (await connection.close());
     } catch (e) {
-      this.logger.error(e.message);
+      this.logger.error(e?.message);
     }
   }
 
