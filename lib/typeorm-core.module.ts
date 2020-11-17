@@ -6,6 +6,7 @@ import {
   OnApplicationShutdown,
   Provider,
   Type,
+  Logger,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer } from 'rxjs';
@@ -33,6 +34,8 @@ import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
 @Global()
 @Module({})
 export class TypeOrmCoreModule implements OnApplicationShutdown {
+  private readonly logger = new Logger('TypeOrmModule');
+
   constructor(
     @Inject(TYPEORM_MODULE_OPTIONS)
     private readonly options: TypeOrmModuleOptions,
@@ -106,7 +109,11 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     const connection = this.moduleRef.get<Connection>(
       getConnectionToken(this.options as ConnectionOptions) as Type<Connection>,
     );
-    connection && (await connection.close());
+    try {
+      connection && (await connection.close());
+    } catch (e) {
+      this.logger.error(e?.message);
+    }
   }
 
   private static createAsyncProviders(
