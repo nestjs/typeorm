@@ -25,7 +25,7 @@
     "@nestjs/core": "7.5.5",
     "@nestjs/platform-express": "7.5.5",
     "@nestjs/testing": "7.5.5",
-    "@types/jest": "26.0.16",
+    "@types/jest": "26.0.17",
     "@types/node": "7.10.8",
     "@types/supertest": "2.0.10",
     "@types/uuid": "8.3.0",
