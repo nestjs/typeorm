@@ -9,7 +9,6 @@ import {
   EntitySchema,
   Repository,
 } from 'typeorm';
-import { isNullOrUndefined } from 'util';
 import { v4 as uuid } from 'uuid';
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
@@ -27,7 +26,7 @@ export function getRepositoryToken(
   entity: EntityClassOrSchema,
   connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
 ) {
-  if (isNullOrUndefined(entity)) {
+  if ((entity === null) || (entity === undefined)) {
     throw new CircularDependencyException('@InjectRepository()');
   }
   const connectionPrefix = getConnectionPrefix(connection);
