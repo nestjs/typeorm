@@ -42,9 +42,9 @@ export function getRepositoryToken(
   if (entity instanceof EntitySchema) {
     return `${connectionPrefix}${
       entity.options.target ? entity.options.target.name : entity.options.name
-    }Repository`;
+    }Repository-Token`;
   }
-  return `${connectionPrefix}${entity.name}Repository`;
+  return `${connectionPrefix}${entity.name}Repository-Token`;
 }
 
 /**
@@ -71,10 +71,10 @@ export function getConnectionToken(
   return DEFAULT_CONNECTION_NAME === connection
     ? Connection
     : 'string' === typeof connection
-    ? `${connection}Connection`
+    ? `${connection}Connection-Token`
     : DEFAULT_CONNECTION_NAME === connection.name || !connection.name
     ? Connection
-    : `${connection.name}Connection`;
+    : `${connection.name}Connection-Token`;
 }
 
 /**
@@ -110,10 +110,10 @@ export function getEntityManagerToken(
   return DEFAULT_CONNECTION_NAME === connection
     ? EntityManager
     : 'string' === typeof connection
-    ? `${connection}EntityManager`
+    ? `${connection}EntityManager-Token`
     : DEFAULT_CONNECTION_NAME === connection.name || !connection.name
     ? EntityManager
-    : `${connection.name}EntityManager`;
+    : `${connection.name}EntityManager-Token`;
 }
 
 export function handleRetry(
