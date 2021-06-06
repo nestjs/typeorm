@@ -41,7 +41,7 @@
     "pg": "8.6.0",
     "prettier": "2.3.1",
     "reflect-metadata": "0.1.13",
-    "release-it": "14.7.0",
+    "release-it": "14.8.0",
     "rxjs": "6.6.7",
     "rxjs-compat": "6.6.7",
     "supertest": "6.1.3",
