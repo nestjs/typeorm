@@ -1,6 +1,6 @@
 import { Type } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { ConnectionOptions } from 'typeorm';
+import { Connection, ConnectionOptions } from 'typeorm';
 
 export type TypeOrmModuleOptions = {
   /**
@@ -41,6 +41,10 @@ export interface TypeOrmOptionsFactory {
   ): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
 }
 
+export type TypeOrmConnectionFactory = (
+  options?: ConnectionOptions,
+) => Promise<Connection>;
+
 export interface TypeOrmModuleAsyncOptions
   extends Pick<ModuleMetadata, 'imports'> {
   name?: string;
@@ -49,5 +53,6 @@ export interface TypeOrmModuleAsyncOptions
   useFactory?: (
     ...args: any[]
   ) => Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
+  connectionFactory?: TypeOrmConnectionFactory;
   inject?: any[];
 }

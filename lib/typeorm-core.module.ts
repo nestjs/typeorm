@@ -25,6 +25,7 @@ import {
 } from './common/typeorm.utils';
 import { EntitiesMetadataStorage } from './entities-metadata.storage';
 import {
+  TypeOrmConnectionFactory,
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
@@ -70,12 +71,18 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       provide: getConnectionToken(options as ConnectionOptions) as string,
       useFactory: async (typeOrmOptions: TypeOrmModuleOptions) => {
         if (options.name) {
-          return await this.createConnectionFactory({
-            ...typeOrmOptions,
-            name: options.name,
-          });
+          return await this.createConnectionFactory(
+            {
+              ...typeOrmOptions,
+              name: options.name,
+            },
+            options.connectionFactory,
+          );
         }
-        return await this.createConnectionFactory(typeOrmOptions);
+        return await this.createConnectionFactory(
+          typeOrmOptions,
+          options.connectionFactory,
+        );
       },
       inject: [TYPEORM_MODULE_OPTIONS],
     };
@@ -166,6 +173,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
 
   private static async createConnectionFactory(
     options: TypeOrmModuleOptions,
+    connectionFactory?: TypeOrmConnectionFactory,
   ): Promise<Connection> {
     try {
       if (options.keepConnectionAlive) {
@@ -181,12 +189,13 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     } catch {}
 
     const connectionToken = getConnectionName(options as ConnectionOptions);
+    const createTypeormConnection = connectionFactory ?? createConnection;
     return await defer(() => {
       if (!options.type) {
-        return createConnection();
+        return createTypeormConnection();
       }
       if (!options.autoLoadEntities) {
-        return createConnection(options as ConnectionOptions);
+        return createTypeormConnection(options as ConnectionOptions);
       }
 
       let entities = options.entities;
@@ -199,7 +208,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           connectionToken,
         );
       }
-      return createConnection({
+      return createTypeormConnection({
         ...options,
         entities,
       } as ConnectionOptions);
