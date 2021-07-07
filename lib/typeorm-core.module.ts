@@ -9,7 +9,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { defer } from 'rxjs';
+import { defer, of } from 'rxjs';
 import {
   Connection,
   ConnectionOptions,
@@ -175,22 +175,22 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     options: TypeOrmModuleOptions,
     connectionFactory?: TypeOrmConnectionFactory,
   ): Promise<Connection> {
-    try {
-      if (options.keepConnectionAlive) {
-        const connectionName = getConnectionName(options as ConnectionOptions);
-        const manager = getConnectionManager();
-        if (manager.has(connectionName)) {
-          const connection = manager.get(connectionName);
-          if (connection.isConnected) {
-            return connection;
-          }
-        }
-      }
-    } catch {}
-
     const connectionToken = getConnectionName(options as ConnectionOptions);
     const createTypeormConnection = connectionFactory ?? createConnection;
     return await defer(() => {
+      try {
+        if (options.keepConnectionAlive) {
+          const connectionName = getConnectionName(options as ConnectionOptions);
+          const manager = getConnectionManager();
+          if (manager.has(connectionName)) {
+            const connection = manager.get(connectionName);
+            if (connection.isConnected) {
+              return of(connection);
+            }
+          }
+        }
+      } catch {}
+
       if (!options.type) {
         return createTypeormConnection();
       }
