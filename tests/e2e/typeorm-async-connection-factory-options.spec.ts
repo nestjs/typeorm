@@ -1,8 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { Server } from 'http';
 import * as request from 'supertest';
 import { AsyncConnectionFactoryOptionsFactoryModule } from '../src/async-connection-factory-options.module';
-import { Server } from 'http';
 
 describe('TypeOrm (async configuration with connectionFactory)', () => {
   let server: Server;

@@ -1,32 +1,34 @@
 import {
   DynamicModule,
   Global,
-  Inject, Logger, Module,
+  Inject,
+  Logger,
+  Module,
   OnApplicationShutdown,
   Provider,
-  Type
+  Type,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { defer, lastValueFrom,  of } from 'rxjs';
+import { defer, lastValueFrom, of } from 'rxjs';
 import {
   Connection,
   ConnectionOptions,
   createConnection,
-  getConnectionManager
+  getConnectionManager,
 } from 'typeorm';
 import {
   generateString,
   getConnectionName,
   getConnectionToken,
   getEntityManagerToken,
-  handleRetry
+  handleRetry,
 } from './common/typeorm.utils';
 import { EntitiesMetadataStorage } from './entities-metadata.storage';
 import {
   TypeOrmConnectionFactory,
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
-  TypeOrmOptionsFactory
+  TypeOrmOptionsFactory,
 } from './interfaces/typeorm-options.interface';
 import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
 
@@ -175,43 +177,44 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   ): Promise<Connection> {
     const connectionToken = getConnectionName(options as ConnectionOptions);
     const createTypeormConnection = connectionFactory ?? createConnection;
-    return await lastValueFrom(defer(() => {
-      try {
-        if (options.keepConnectionAlive) {
-          const connectionName = getConnectionName(options as ConnectionOptions);
-          const manager = getConnectionManager();
-          if (manager.has(connectionName)) {
-            const connection = manager.get(connectionName);
-            if (connection.isConnected) {
-              return of(connection);
+    return await lastValueFrom(
+      defer(() => {
+        try {
+          if (options.keepConnectionAlive) {
+            const connectionName = getConnectionName(
+              options as ConnectionOptions,
+            );
+            const manager = getConnectionManager();
+            if (manager.has(connectionName)) {
+              const connection = manager.get(connectionName);
+              if (connection.isConnected) {
+                return of(connection);
+              }
             }
           }
+        } catch {}
+
+        if (!options.type) {
+          return createTypeormConnection();
         }
-      } catch {}
+        if (!options.autoLoadEntities) {
+          return createTypeormConnection(options as ConnectionOptions);
+        }
 
-      if (!options.type) {
-        return createTypeormConnection();
-      }
-      if (!options.autoLoadEntities) {
-        return createTypeormConnection(options as ConnectionOptions);
-      }
-
-      let entities = options.entities;
-      if (entities) {
-        entities = entities.concat(
-          EntitiesMetadataStorage.getEntitiesByConnection(connectionToken),
-        );
-      } else {
-        entities = EntitiesMetadataStorage.getEntitiesByConnection(
-          connectionToken,
-        );
-      }
-      return createTypeormConnection({
-        ...options,
-        entities,
-      } as ConnectionOptions);
-    })
-      .pipe(
+        let entities = options.entities;
+        if (entities) {
+          entities = entities.concat(
+            EntitiesMetadataStorage.getEntitiesByConnection(connectionToken),
+          );
+        } else {
+          entities =
+            EntitiesMetadataStorage.getEntitiesByConnection(connectionToken);
+        }
+        return createTypeormConnection({
+          ...options,
+          entities,
+        } as ConnectionOptions);
+      }).pipe(
         handleRetry(
           options.retryAttempts,
           options.retryDelay,
@@ -219,6 +222,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           options.verboseRetryLog,
           options.toRetry,
         ),
-      ));
+      ),
+    );
   }
 }
