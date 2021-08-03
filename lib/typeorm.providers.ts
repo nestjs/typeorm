@@ -3,6 +3,7 @@ import {
   AbstractRepository,
   Connection,
   ConnectionOptions,
+  getMetadataArgsStorage,
   Repository,
 } from 'typeorm';
 import { getConnectionToken, getRepositoryToken } from './common/typeorm.utils';
@@ -28,5 +29,13 @@ export function createTypeOrmProviders(
         : connection.getRepository(entity);
     },
     inject: [getConnectionToken(connection)],
+    /**
+     * Extra property to workaround dynamic modules serialisation issue
+     * that occurs when "TypeOrm#forFeature()" method is called with the same number
+     * of arguments and all entities share the same class names.
+     */
+    targetEntitySchema: getMetadataArgsStorage().tables.find(
+      (item) => item.target === entity,
+    ),
   }));
 }
