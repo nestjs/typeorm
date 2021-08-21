@@ -68,7 +68,7 @@ export function getCustomRepositoryToken(repository: Function): string {
  * @returns {string | Function} The Connection injection token.
  */
 export function getConnectionToken(
-  connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
+  connection: { name?: string } | string = DEFAULT_CONNECTION_NAME,
 ): string | Function | Type<Connection> {
   return DEFAULT_CONNECTION_NAME === connection
     ? Connection
@@ -107,7 +107,7 @@ export function getConnectionPrefix(
  * @returns {string | Function} The EntityManager injection token.
  */
 export function getEntityManagerToken(
-  connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
+  connection: { name?: string } | string = DEFAULT_CONNECTION_NAME,
 ): string | Function {
   return DEFAULT_CONNECTION_NAME === connection
     ? EntityManager
@@ -157,7 +157,7 @@ export function handleRetry(
     );
 }
 
-export function getConnectionName(options: ConnectionOptions): string {
+export function getConnectionName(options: { name?: string }): string {
   return options && options.name ? options.name : DEFAULT_CONNECTION_NAME;
 }
 
