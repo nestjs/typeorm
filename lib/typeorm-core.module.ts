@@ -109,7 +109,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     };
   }
 
-  async onApplicationShutdown() {
+  async onApplicationShutdown(): Promise<void> {
     if (this.options.keepConnectionAlive) {
       return;
     }

@@ -25,7 +25,7 @@ const logger = new Logger('TypeOrmModule');
 export function getRepositoryToken(
   entity: EntityClassOrSchema,
   connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
-) {
+): Function | string {
   if (entity === null || entity === undefined) {
     throw new CircularDependencyException('@InjectRepository()');
   }
@@ -54,7 +54,7 @@ export function getRepositoryToken(
  * @param {Function} This parameter can either be an Entity or Repository
  * @returns {string} The Repository injection token
  */
-export function getCustomRepositoryToken(repository: Function) {
+export function getCustomRepositoryToken(repository: Function): string {
   if (repository === null || repository === undefined) {
     throw new CircularDependencyException('@InjectRepository()');
   }
@@ -157,8 +157,8 @@ export function handleRetry(
     );
 }
 
-export function getConnectionName(options: ConnectionOptions) {
+export function getConnectionName(options: ConnectionOptions): string {
   return options && options.name ? options.name : DEFAULT_CONNECTION_NAME;
 }
 
-export const generateString = () => uuid();
+export const generateString = (): string => uuid();
