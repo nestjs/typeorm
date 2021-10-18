@@ -9,7 +9,7 @@ export class EntitiesMetadataStorage {
   static addEntitiesByConnection(
     connection: ConnectionToken,
     entities: EntityClassOrSchema[],
-  ) {
+  ): void {
     const connectionToken =
       typeof connection === 'string' ? connection : connection.name;
     if (!connectionToken) {

@@ -11,7 +11,7 @@ import {
 export const InjectRepository = (
   entity: EntityClassOrSchema,
   connection: string = DEFAULT_CONNECTION_NAME,
-) => Inject(getRepositoryToken(entity, connection));
+): ReturnType<typeof Inject> => Inject(getRepositoryToken(entity, connection));
 
 export const InjectConnection: (
   connection?: Connection | ConnectionOptions | string,
