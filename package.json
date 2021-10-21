@@ -34,7 +34,7 @@
     "eslint": "8.0.1",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.25.2",
-    "husky": "7.0.2",
+    "husky": "7.0.4",
     "jest": "27.3.1",
     "lint-staged": "11.2.3",
     "mysql": "2.18.1",
