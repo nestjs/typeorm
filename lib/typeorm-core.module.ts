@@ -173,10 +173,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
 
   private static async createConnectionFactory(
     options: TypeOrmModuleOptions,
-    connectionFactory?: TypeOrmConnectionFactory,
+    connectionFactory: TypeOrmConnectionFactory = createConnection,
   ): Promise<Connection> {
     const connectionToken = getConnectionName(options);
-    const createTypeormConnection = connectionFactory ?? createConnection;
     return await lastValueFrom(
       defer(() => {
         try {
@@ -195,10 +194,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         } catch {}
 
         if (!options.type) {
-          return createTypeormConnection();
+          return connectionFactory();
         }
         if (!options.autoLoadEntities) {
-          return createTypeormConnection(options as ConnectionOptions);
+          return connectionFactory(options as ConnectionOptions);
         }
 
         let entities = options.entities;
@@ -210,7 +209,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           entities =
             EntitiesMetadataStorage.getEntitiesByConnection(connectionToken);
         }
-        return createTypeormConnection({
+        return connectionFactory({
           ...options,
           entities,
         } as ConnectionOptions);
