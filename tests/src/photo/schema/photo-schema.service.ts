@@ -32,4 +32,13 @@ export class PhotoSchemaService {
 
     return await this.photoRepository.create(photoEntity);
   }
+
+  async create2(): Promise<Photo> {
+    const photoEntity = new Photo();
+    photoEntity.name = 'Nest';
+    photoEntity.description = 'Is great!';
+    photoEntity.views = 6000;
+
+    return await this.photoRepository2.create(photoEntity);
+  }
 }

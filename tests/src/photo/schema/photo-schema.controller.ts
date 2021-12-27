@@ -15,4 +15,9 @@ export class PhotoSchemaController {
   create(): Promise<Photo> {
     return this.photoService.create();
   }
+
+  @Post('2')
+  create2(): Promise<Photo> {
+    return this.photoService.create2();
+  }
 }
