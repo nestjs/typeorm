@@ -15,12 +15,12 @@ export const InjectRepository = (
 
 export const InjectConnection: (
   connection?: Connection | ConnectionOptions | string,
-) => ParameterDecorator = (
+) => ReturnType<typeof Inject> = (
   connection?: Connection | ConnectionOptions | string,
 ) => Inject(getConnectionToken(connection));
 
 export const InjectEntityManager: (
   connection?: Connection | ConnectionOptions | string,
-) => ParameterDecorator = (
+) => ReturnType<typeof Inject> = (
   connection?: Connection | ConnectionOptions | string,
 ) => Inject(getEntityManagerToken(connection));
