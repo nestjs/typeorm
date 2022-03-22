@@ -31,7 +31,7 @@
 ## Installation
 
 ```bash
-$ npm i --save @nestjs/typeorm typeorm
+$ npm i --save @nestjs/typeorm typeorm@0.2
 ```
 
 ## Quick Start
