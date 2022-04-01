@@ -1,26 +1,26 @@
 import { Inject } from '@nestjs/common';
-import { Connection, ConnectionOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
-import { DEFAULT_CONNECTION_NAME } from '../typeorm.constants';
+import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
 import {
-  getConnectionToken,
+  getDataSourceToken,
   getEntityManagerToken,
   getRepositoryToken,
 } from './typeorm.utils';
 
 export const InjectRepository = (
   entity: EntityClassOrSchema,
-  connection: string = DEFAULT_CONNECTION_NAME,
-): ReturnType<typeof Inject> => Inject(getRepositoryToken(entity, connection));
+  dataSource: string = DEFAULT_DATA_SOURCE_NAME,
+): ReturnType<typeof Inject> => Inject(getRepositoryToken(entity, dataSource));
 
-export const InjectConnection: (
-  connection?: Connection | ConnectionOptions | string,
+export const InjectdataSource: (
+  dataSource?: DataSource | DataSourceOptions | string,
 ) => ReturnType<typeof Inject> = (
-  connection?: Connection | ConnectionOptions | string,
-) => Inject(getConnectionToken(connection));
+  dataSource?: DataSource | DataSourceOptions | string,
+) => Inject(getDataSourceToken(dataSource));
 
 export const InjectEntityManager: (
-  connection?: Connection | ConnectionOptions | string,
+  dataSource?: DataSource | DataSourceOptions | string,
 ) => ReturnType<typeof Inject> = (
-  connection?: Connection | ConnectionOptions | string,
-) => Inject(getEntityManagerToken(connection));
+  dataSource?: DataSource | DataSourceOptions | string,
+) => Inject(getEntityManagerToken(dataSource));
