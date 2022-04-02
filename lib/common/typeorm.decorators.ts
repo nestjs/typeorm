@@ -13,7 +13,7 @@ export const InjectRepository = (
   dataSource: string = DEFAULT_DATA_SOURCE_NAME,
 ): ReturnType<typeof Inject> => Inject(getRepositoryToken(entity, dataSource));
 
-export const InjectdataSource: (
+export const InjectDataSource: (
   dataSource?: DataSource | DataSourceOptions | string,
 ) => ReturnType<typeof Inject> = (
   dataSource?: DataSource | DataSourceOptions | string,
