@@ -104,6 +104,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           provide: TYPEORM_MODULE_ID,
           useValue: generateString(),
         },
+        ...(options.extraProviders || []),
       ],
       exports: [entityManagerProvider, connectionProvider],
     };
