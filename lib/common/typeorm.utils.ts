@@ -85,6 +85,9 @@ export function getDataSourceToken(
     : `${dataSource.name}DataSource`;
 }
 
+/** @deprecated */
+export const getConnectionToken = getDataSourceToken;
+
 /**
  * This function returns a DataSource prefix based on the dataSource name
  * @param {DataSource | DataSourceOptions | string} [dataSource='default'] This optional parameter is either

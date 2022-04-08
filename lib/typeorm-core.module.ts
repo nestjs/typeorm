@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer, lastValueFrom } from 'rxjs';
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { Connection, DataSource, DataSourceOptions } from 'typeorm';
 import {
   generateString,
   getDataSourceName,
@@ -44,26 +44,39 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       useValue: options,
     };
     const dataSourceProvider = {
-      provide: getDataSourceToken(options as DataSourceOptions) as string,
+      provide: getDataSourceToken(options as DataSourceOptions),
       useFactory: async () => await this.createDataSourceFactory(options),
     };
     const entityManagerProvider = this.createEntityManagerProvider(
       options as DataSourceOptions,
     );
+
+    const providers = [
+      entityManagerProvider,
+      dataSourceProvider,
+      typeOrmModuleOptions,
+    ];
+    const exports = [entityManagerProvider, dataSourceProvider];
+
+    // TODO: "Connection" class is going to be removed in the next version of "typeorm"
+    if (dataSourceProvider.provide === DataSource) {
+      providers.push({
+        provide: Connection,
+        useExisting: DataSource,
+      });
+      exports.push(Connection);
+    }
+
     return {
       module: TypeOrmCoreModule,
-      providers: [
-        entityManagerProvider,
-        dataSourceProvider,
-        typeOrmModuleOptions,
-      ],
-      exports: [entityManagerProvider, dataSourceProvider],
+      providers,
+      exports,
     };
   }
 
   static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
     const dataSourceProvider = {
-      provide: getDataSourceToken(options as DataSourceOptions) as string,
+      provide: getDataSourceToken(options as DataSourceOptions),
       useFactory: async (typeOrmOptions: TypeOrmModuleOptions) => {
         if (options.name) {
           return await this.createDataSourceFactory(
@@ -88,19 +101,34 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     };
 
     const asyncProviders = this.createAsyncProviders(options);
+    const providers = [
+      ...asyncProviders,
+      entityManagerProvider,
+      dataSourceProvider,
+      {
+        provide: TYPEORM_MODULE_ID,
+        useValue: generateString(),
+      },
+    ];
+    const exports: Array<Provider | Function> = [
+      entityManagerProvider,
+      dataSourceProvider,
+    ];
+
+    // TODO: "Connection" class is going to be removed in the next version of "typeorm"
+    if (dataSourceProvider.provide === DataSource) {
+      providers.push({
+        provide: Connection,
+        useExisting: DataSource,
+      });
+      exports.push(Connection);
+    }
+
     return {
       module: TypeOrmCoreModule,
       imports: options.imports,
-      providers: [
-        ...asyncProviders,
-        entityManagerProvider,
-        dataSourceProvider,
-        {
-          provide: TYPEORM_MODULE_ID,
-          useValue: generateString(),
-        },
-      ],
-      exports: [entityManagerProvider, dataSourceProvider],
+      providers,
+      exports,
     };
   }
 
