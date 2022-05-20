@@ -137,7 +137,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       getDataSourceToken(this.options as DataSourceOptions) as Type<DataSource>,
     );
     try {
-      dataSource && (await dataSource.destroy());
+      if (dataSource && dataSource.isInitialized) {
+        await dataSource.destroy();
+      }
     } catch (e) {
       this.logger.error(e?.message);
     }
