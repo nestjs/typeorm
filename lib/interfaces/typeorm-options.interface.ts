@@ -1,4 +1,4 @@
-import { ModuleMetadata, Type } from '@nestjs/common';
+import { ModuleMetadata, Provider, Type } from '@nestjs/common';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 export type TypeOrmModuleOptions = {
@@ -50,4 +50,5 @@ export interface TypeOrmModuleAsyncOptions
   ) => Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
   dataSourceFactory?: TypeOrmDataSourceFactory;
   inject?: any[];
+  extraProviders?: Provider[];
 }

@@ -6,7 +6,7 @@ import {
   Module,
   OnApplicationShutdown,
   Provider,
-  Type,
+  Type
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer, lastValueFrom } from 'rxjs';
@@ -16,14 +16,14 @@ import {
   getDataSourceName,
   getDataSourceToken,
   getEntityManagerToken,
-  handleRetry,
+  handleRetry
 } from './common/typeorm.utils';
 import { EntitiesMetadataStorage } from './entities-metadata.storage';
 import {
   TypeOrmDataSourceFactory,
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
-  TypeOrmOptionsFactory,
+  TypeOrmOptionsFactory
 } from './interfaces/typeorm-options.interface';
 import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
 
@@ -109,6 +109,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         provide: TYPEORM_MODULE_ID,
         useValue: generateString(),
       },
+      ...(options.extraProviders || []),
     ];
     const exports: Array<Provider | Function> = [
       entityManagerProvider,
