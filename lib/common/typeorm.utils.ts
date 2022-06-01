@@ -3,50 +3,53 @@ import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
 import {
   AbstractRepository,
-  Connection,
-  ConnectionOptions,
+  DataSource,
+  DataSourceOptions,
   EntityManager,
   EntitySchema,
-  Repository
+  Repository,
 } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
-import { DEFAULT_CONNECTION_NAME } from '../typeorm.constants';
+import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
 
 const logger = new Logger('TypeOrmModule');
 
 /**
  * This function generates an injection token for an Entity or Repository
  * @param {EntityClassOrSchema} entity parameter can either be an Entity or Repository
- * @param {string} [connection='default'] Connection name
+ * @param {string} [dataSource='default'] DataSource name
  * @returns {string} The Entity | Repository injection token
  */
 export function getRepositoryToken(
   entity: EntityClassOrSchema,
-  connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
+  dataSource:
+    | DataSource
+    | DataSourceOptions
+    | string = DEFAULT_DATA_SOURCE_NAME,
 ): Function | string {
   if (entity === null || entity === undefined) {
     throw new CircularDependencyException('@InjectRepository()');
   }
-  const connectionPrefix = getConnectionPrefix(connection);
+  const dataSourcePrefix = getDataSourcePrefix(dataSource);
   if (
     entity instanceof Function &&
     (entity.prototype instanceof Repository ||
       entity.prototype instanceof AbstractRepository)
   ) {
-    if (!connectionPrefix) {
+    if (!dataSourcePrefix) {
       return entity;
     }
-    return `${connectionPrefix}${getCustomRepositoryToken(entity)}`;
+    return `${dataSourcePrefix}${getCustomRepositoryToken(entity)}`;
   }
 
   if (entity instanceof EntitySchema) {
-    return `${connectionPrefix}${
+    return `${dataSourcePrefix}${
       entity.options.target ? entity.options.target.name : entity.options.name
     }Repository`;
   }
-  return `${connectionPrefix}${entity.name}Repository`;
+  return `${dataSourcePrefix}${entity.name}Repository`;
 }
 
 /**
@@ -62,66 +65,78 @@ export function getCustomRepositoryToken(repository: Function): string {
 }
 
 /**
- * This function returns a Connection injection token for the given Connection, ConnectionOptions or connection name.
- * @param {Connection | ConnectionOptions | string} [connection='default'] This optional parameter is either
- * a Connection, or a ConnectionOptions or a string.
- * @returns {string | Function} The Connection injection token.
+ * This function returns a DataSource injection token for the given DataSource, DataSourceOptions or dataSource name.
+ * @param {DataSource | DataSourceOptions | string} [dataSource='default'] This optional parameter is either
+ * a DataSource, or a DataSourceOptions or a string.
+ * @returns {string | Function} The DataSource injection token.
  */
-export function getConnectionToken(
-  connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
-): string | Function | Type<Connection> {
-  return DEFAULT_CONNECTION_NAME === connection
-    ? Connection
-    : 'string' === typeof connection
-    ? `${connection}Connection`
-    : DEFAULT_CONNECTION_NAME === connection.name || !connection.name
-    ? Connection
-    : `${connection.name}Connection`;
+export function getDataSourceToken(
+  dataSource:
+    | DataSource
+    | DataSourceOptions
+    | string = DEFAULT_DATA_SOURCE_NAME,
+): string | Function | Type<DataSource> {
+  return DEFAULT_DATA_SOURCE_NAME === dataSource
+    ? DataSource
+    : 'string' === typeof dataSource
+    ? `${dataSource}DataSource`
+    : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
+    ? DataSource
+    : `${dataSource.name}DataSource`;
 }
 
+/** @deprecated */
+export const getConnectionToken = getDataSourceToken;
+
 /**
- * This function returns a Connection prefix based on the connection name
- * @param {Connection | ConnectionOptions | string} [connection='default'] This optional parameter is either
- * a Connection, or a ConnectionOptions or a string.
- * @returns {string | Function} The Connection injection token.
+ * This function returns a DataSource prefix based on the dataSource name
+ * @param {DataSource | DataSourceOptions | string} [dataSource='default'] This optional parameter is either
+ * a DataSource, or a DataSourceOptions or a string.
+ * @returns {string | Function} The DataSource injection token.
  */
-export function getConnectionPrefix(
-  connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
+export function getDataSourcePrefix(
+  dataSource:
+    | DataSource
+    | DataSourceOptions
+    | string = DEFAULT_DATA_SOURCE_NAME,
 ): string {
-  if (connection === DEFAULT_CONNECTION_NAME) {
+  if (dataSource === DEFAULT_DATA_SOURCE_NAME) {
     return '';
   }
-  if (typeof connection === 'string') {
-    return connection + '_';
+  if (typeof dataSource === 'string') {
+    return dataSource + '_';
   }
-  if (connection.name === DEFAULT_CONNECTION_NAME || !connection.name) {
+  if (dataSource.name === DEFAULT_DATA_SOURCE_NAME || !dataSource.name) {
     return '';
   }
-  return connection.name + '_';
+  return dataSource.name + '_';
 }
 
 /**
- * This function returns an EntityManager injection token for the given Connection, ConnectionOptions or connection name.
- * @param {Connection | ConnectionOptions | string} [connection='default'] This optional parameter is either
- * a Connection, or a ConnectionOptions or a string.
+ * This function returns an EntityManager injection token for the given DataSource, DataSourceOptions or dataSource name.
+ * @param {DataSource | DataSourceOptions | string} [dataSource='default'] This optional parameter is either
+ * a DataSource, or a DataSourceOptions or a string.
  * @returns {string | Function} The EntityManager injection token.
  */
 export function getEntityManagerToken(
-  connection: Connection | ConnectionOptions | string = DEFAULT_CONNECTION_NAME,
+  dataSource:
+    | DataSource
+    | DataSourceOptions
+    | string = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function {
-  return DEFAULT_CONNECTION_NAME === connection
+  return DEFAULT_DATA_SOURCE_NAME === dataSource
     ? EntityManager
-    : 'string' === typeof connection
-    ? `${connection}EntityManager`
-    : DEFAULT_CONNECTION_NAME === connection.name || !connection.name
+    : 'string' === typeof dataSource
+    ? `${dataSource}EntityManager`
+    : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
     ? EntityManager
-    : `${connection.name}EntityManager`;
+    : `${dataSource.name}EntityManager`;
 }
 
 export function handleRetry(
   retryAttempts = 9,
   retryDelay = 3000,
-  connectionName = DEFAULT_CONNECTION_NAME,
+  dataSourceName = DEFAULT_DATA_SOURCE_NAME,
   verboseRetryLog = false,
   toRetry?: (err: any) => boolean,
 ): <T>(source: Observable<T>) => Observable<T> {
@@ -133,17 +148,18 @@ export function handleRetry(
             if (toRetry && !toRetry(error)) {
               throw error;
             }
-            const connectionInfo =
-              connectionName === DEFAULT_CONNECTION_NAME
+            const dataSourceInfo =
+              dataSourceName === DEFAULT_DATA_SOURCE_NAME
                 ? ''
-                : ` (${connectionName})`;
+                : ` (${dataSourceName})`;
             const verboseMessage = verboseRetryLog
               ? ` Message: ${error.message}.`
               : '';
 
             logger.error(
-              `Unable to connect to the database${connectionInfo}.${verboseMessage} Retrying (${errorCount +
-                1})...`,
+              `Unable to connect to the database${dataSourceInfo}.${verboseMessage} Retrying (${
+                errorCount + 1
+              })...`,
               error.stack,
             );
             if (errorCount + 1 >= retryAttempts) {
@@ -157,8 +173,8 @@ export function handleRetry(
     );
 }
 
-export function getConnectionName(options: ConnectionOptions): string {
-  return options && options.name ? options.name : DEFAULT_CONNECTION_NAME;
+export function getDataSourceName(options: DataSourceOptions): string {
+  return options && options.name ? options.name : DEFAULT_DATA_SOURCE_NAME;
 }
 
 export const generateString = (): string => uuid();
