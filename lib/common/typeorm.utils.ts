@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
 import {
   AbstractRepository,
+  Connection,
   DataSource,
   DataSourceOptions,
   EntityManager,
@@ -77,11 +78,11 @@ export function getDataSourceToken(
     | string = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function | Type<DataSource> {
   return DEFAULT_DATA_SOURCE_NAME === dataSource
-    ? DataSource
+    ? DataSource ?? Connection
     : 'string' === typeof dataSource
     ? `${dataSource}DataSource`
     : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
-    ? DataSource
+    ? DataSource ?? Connection
     : `${dataSource.name}DataSource`;
 }
 

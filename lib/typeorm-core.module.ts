@@ -6,24 +6,29 @@ import {
   Module,
   OnApplicationShutdown,
   Provider,
-  Type
+  Type,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer, lastValueFrom } from 'rxjs';
-import { Connection, DataSource, DataSourceOptions } from 'typeorm';
+import {
+  Connection,
+  createConnection,
+  DataSource,
+  DataSourceOptions,
+} from 'typeorm';
 import {
   generateString,
   getDataSourceName,
   getDataSourceToken,
   getEntityManagerToken,
-  handleRetry
+  handleRetry,
 } from './common/typeorm.utils';
 import { EntitiesMetadataStorage } from './entities-metadata.storage';
 import {
   TypeOrmDataSourceFactory,
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
-  TypeOrmOptionsFactory
+  TypeOrmOptionsFactory,
 } from './interfaces/typeorm-options.interface';
 import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
 
@@ -201,14 +206,18 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     const dataSourceToken = getDataSourceName(options as DataSourceOptions);
     const createTypeormDataSource =
       dataSourceFactory ??
-      ((options: DataSourceOptions) => new DataSource(options));
+      ((options: DataSourceOptions) => {
+        return DataSource === undefined
+          ? createConnection(options)
+          : new DataSource(options);
+      });
     return await lastValueFrom(
       defer(async () => {
         if (!options.autoLoadEntities) {
           const dataSource = await createTypeormDataSource(
             options as DataSourceOptions,
           );
-          return dataSource.initialize();
+          return dataSource.initialize ? dataSource.initialize() : dataSource;
         }
 
         let entities = options.entities;
@@ -224,7 +233,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           ...options,
           entities,
         } as DataSourceOptions);
-        return dataSource.initialize();
+        return dataSource.initialize ? dataSource.initialize() : dataSource;
       }).pipe(
         handleRetry(
           options.retryAttempts,
