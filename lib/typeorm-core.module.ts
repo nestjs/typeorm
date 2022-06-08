@@ -217,7 +217,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           const dataSource = await createTypeormDataSource(
             options as DataSourceOptions,
           );
-          return dataSource.initialize ? dataSource.initialize() : dataSource;
+          return dataSource.initialize && !dataSource.isInitialized ? dataSource.initialize() : dataSource;
         }
 
         let entities = options.entities;
@@ -233,7 +233,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           ...options,
           entities,
         } as DataSourceOptions);
-        return dataSource.initialize ? dataSource.initialize() : dataSource;
+        return dataSource.initialize && !dataSource.isInitialized ? dataSource.initialize() : dataSource;
       }).pipe(
         handleRetry(
           options.retryAttempts,
