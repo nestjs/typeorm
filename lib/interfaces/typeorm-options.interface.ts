@@ -26,6 +26,7 @@ export type TypeOrmModuleOptions = {
   autoLoadEntities?: boolean;
   /**
    * If `true`, connection will not be closed on application shutdown.
+   * @deprecated
    */
   keepConnectionAlive?: boolean;
   /**
