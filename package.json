@@ -19,8 +19,8 @@
     "release": "release-it"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.1.2",
-    "@commitlint/config-angular": "17.1.0",
+    "@commitlint/cli": "17.2.0",
+    "@commitlint/config-angular": "17.2.0",
     "@nestjs/common": "9.1.6",
     "@nestjs/core": "9.1.6",
     "@nestjs/platform-express": "9.1.6",
