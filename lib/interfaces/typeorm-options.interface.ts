@@ -47,7 +47,7 @@ export type TypeOrmDataSourceFactory = (
 
 export interface TypeOrmModuleAsyncOptions
   extends Pick<ModuleMetadata, 'imports'> {
-  name?: string;
+  name: string;
   useExisting?: Type<TypeOrmOptionsFactory>;
   useClass?: Type<TypeOrmOptionsFactory>;
   useFactory?: (
