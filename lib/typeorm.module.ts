@@ -31,7 +31,7 @@ export class TypeOrmModule {
     return {
       module: TypeOrmModule,
       providers: providers,
-      exports: providers,
+      exports: providers.map((provider) => provider.provide),
     };
   }
 
