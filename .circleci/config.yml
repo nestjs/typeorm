@@ -17,7 +17,7 @@ jobs:
   build:
     working_directory: ~/nest
     docker:
-      - image: cimg/node:19.3
+      - image: cimg/node:19.5
     steps:
       - checkout
       - run:
