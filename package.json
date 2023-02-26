@@ -27,7 +27,7 @@
     "@nestjs/platform-express": "9.3.9",
     "@nestjs/testing": "9.3.9",
     "@types/jest": "29.4.0",
-    "@types/node": "18.14.1",
+    "@types/node": "18.14.2",
     "@types/supertest": "2.0.12",
     "@types/uuid": "9.0.1",
     "@typescript-eslint/eslint-plugin": "5.53.0",
