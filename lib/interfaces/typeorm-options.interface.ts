@@ -5,6 +5,7 @@ export type TypeOrmModuleOptions = {
   /**
    * Name of connection
    * Must match the `name` provided to `TypeOrmModule.forRootAsync` if `forRootAsync` is used.
+   */
   name?: string;
   /**
    * Number of times to retry connecting
