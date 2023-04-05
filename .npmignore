@@ -17,3 +17,5 @@ renovate.json
 .release-it.json
 .eslintignore
 .eslintrc.js
+docker-compose.yml
+.circleci/
