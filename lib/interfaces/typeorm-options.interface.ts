@@ -3,6 +3,11 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 export type TypeOrmModuleOptions = {
   /**
+   * Name of connection
+   * Must match the `name` provided to `TypeOrmModule.forRootAsync` if `forRootAsync` is used.
+   */
+  name?: string;
+  /**
    * Number of times to retry connecting
    * Default: 10
    */
@@ -47,6 +52,10 @@ export type TypeOrmDataSourceFactory = (
 
 export interface TypeOrmModuleAsyncOptions
   extends Pick<ModuleMetadata, 'imports'> {
+  /**
+   * Name of connection.
+   * Must match `name` provided to `TypeOrmModuleOptions`.
+   */
   name?: string;
   useExisting?: Type<TypeOrmOptionsFactory>;
   useClass?: Type<TypeOrmOptionsFactory>;
