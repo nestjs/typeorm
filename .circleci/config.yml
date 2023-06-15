@@ -7,7 +7,7 @@ aliases:
   - &install-deps
     run:
       name: Install dependencies
-      command: npm ci
+      command: npm ci --ignore-scripts
   - &build-packages
     run:
       name: Build
@@ -22,12 +22,12 @@ jobs:
       - checkout
       - run:
           name: Update NPM version
-          command: sudo npm install -g npm@latest
+          command: sudo npm install -g npm@latest --ignore-scripts
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
-          command: npm ci
+          command: npm ci --ignore-scripts
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
