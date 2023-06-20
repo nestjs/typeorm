@@ -46,7 +46,7 @@
     "rxjs": "7.8.1",
     "supertest": "6.3.3",
     "ts-jest": "29.1.0",
-    "typeorm": "0.3.16",
+    "typeorm": "0.3.17",
     "typescript": "5.1.3"
   },
   "dependencies": {
