@@ -213,32 +213,28 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       });
     return await lastValueFrom(
       defer(async () => {
+        let dataSource: DataSource;
         if (!options.autoLoadEntities) {
-          const dataSource = await createTypeormDataSource(
+          dataSource = await createTypeormDataSource(
             options as DataSourceOptions,
           );
-          // TODO: remove "dataSource.initialize" condition (left for backward compatibility)
-          return (dataSource as any).initialize && !dataSource.isInitialized
-            ? dataSource.initialize()
-            : dataSource;
-        }
-
-        let entities = options.entities;
-        if (Array.isArray(entities)) {
-          entities = entities.concat(
-            EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken),
-          );
         } else {
-          entities =
-            EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken);
+          let entities = options.entities;
+          if (Array.isArray(entities)) {
+            entities = entities.concat(
+              EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken),
+            );
+          } else {
+            entities =
+              EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken);
+          }
+          dataSource = await createTypeormDataSource({
+            ...options,
+            entities,
+          } as DataSourceOptions);
         }
-        const dataSource = await createTypeormDataSource({
-          ...options,
-          entities,
-        } as DataSourceOptions);
-
         // TODO: remove "dataSource.initialize" condition (left for backward compatibility)
-        return (dataSource as any).initialize && !dataSource.isInitialized
+        return (dataSource as any).initialize && !dataSource.isInitialized && !options.manualInitialization
           ? dataSource.initialize()
           : dataSource;
       }).pipe(

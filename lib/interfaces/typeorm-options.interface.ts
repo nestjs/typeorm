@@ -33,6 +33,13 @@ export type TypeOrmModuleOptions = {
    * If `true`, will show verbose error messages on each connection retry.
    */
   verboseRetryLog?: boolean;
+  /**
+   * If `true` database initialization will not be performed during module initialization.
+   * This means that database connection will not be established and migrations will not run.
+   * Database initialization will have to be performed manually using `DataSource.initialize`
+   * and it will have to implement own retry mechanism (if necessary).
+   */
+  manualInitialization?: boolean;
 } & Partial<DataSourceOptions>;
 
 export interface TypeOrmOptionsFactory {
