@@ -29,7 +29,7 @@
     "@types/jest": "29.5.8",
     "@types/node": "20.8.10",
     "@types/supertest": "2.0.16",
-    "@types/uuid": "9.0.6",
+    "@types/uuid": "9.0.7",
     "@typescript-eslint/eslint-plugin": "6.10.0",
     "@typescript-eslint/parser": "6.10.0",
     "eslint": "8.53.0",
