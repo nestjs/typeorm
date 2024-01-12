@@ -40,7 +40,7 @@
     "lint-staged": "15.2.0",
     "mysql": "2.18.1",
     "pg": "8.11.3",
-    "prettier": "3.1.1",
+    "prettier": "3.2.1",
     "reflect-metadata": "0.1.14",
     "release-it": "17.0.1",
     "rxjs": "7.8.1",
