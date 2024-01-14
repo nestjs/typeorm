@@ -44,7 +44,7 @@
     "reflect-metadata": "0.1.14",
     "release-it": "17.0.1",
     "rxjs": "7.8.1",
-    "supertest": "6.3.3",
+    "supertest": "6.3.4",
     "ts-jest": "29.1.1",
     "typeorm": "0.3.19",
     "typescript": "5.3.3"
