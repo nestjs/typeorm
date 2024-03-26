@@ -1,6 +1,6 @@
 import { Provider } from '@nestjs/common';
-import { DataSource, DataSourceOptions, getMetadataArgsStorage } from 'typeorm';
-import { getDataSourceToken, getRepositoryToken } from './common/typeorm.utils';
+import { DataSource, DataSourceOptions, EntityManager, getMetadataArgsStorage } from 'typeorm';
+import { getDataSourceToken, getEntityManagerToken, getRepositoryToken } from './common/typeorm.utils';
 import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
 
 export function createTypeOrmProviders(
@@ -9,16 +9,16 @@ export function createTypeOrmProviders(
 ): Provider[] {
   return (entities || []).map((entity) => ({
     provide: getRepositoryToken(entity, dataSource),
-    useFactory: (dataSource: DataSource) => {
-      const entityMetadata = dataSource.entityMetadatas.find((meta) => meta.target === entity)
+    useFactory: (entityManager: EntityManager) => {
+      const entityMetadata = entityManager.connection.entityMetadatas.find((meta) => meta.target === entity)
       const isTreeEntity = typeof entityMetadata?.treeType !== 'undefined'
-      return isTreeEntity 
-        ? dataSource.getTreeRepository(entity)
-        : dataSource.options.type === 'mongodb'
-          ? dataSource.getMongoRepository(entity)
-          : dataSource.getRepository(entity);
+      return isTreeEntity
+        ? entityManager.getTreeRepository(entity)
+        : entityManager.connection.options.type === 'mongodb'
+          ? entityManager.getMongoRepository(entity)
+          : entityManager.getRepository(entity);
     },
-    inject: [getDataSourceToken(dataSource)],
+    inject: [getEntityManagerToken(dataSource)],
     /**
      * Extra property to workaround dynamic modules serialisation issue
      * that occurs when "TypeOrm#forFeature()" method is called with the same number
