@@ -19,9 +19,6 @@ export const InjectDataSource: (
   dataSource?: DataSource | DataSourceOptions | string,
 ) => Inject(getDataSourceToken(dataSource));
 
-/** @deprecated */
-export const InjectConnection = InjectDataSource;
-
 export const InjectEntityManager: (
   dataSource?: DataSource | DataSourceOptions | string,
 ) => ReturnType<typeof Inject> = (
