@@ -10,7 +10,6 @@ import {
   EntitySchema,
   Repository,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
 import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
@@ -78,12 +77,12 @@ export function getDataSourceToken(
     | string = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function | Type<DataSource> {
   return DEFAULT_DATA_SOURCE_NAME === dataSource
-    ? DataSource ?? Connection
+    ? (DataSource ?? Connection)
     : 'string' === typeof dataSource
-    ? `${dataSource}DataSource`
-    : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
-    ? DataSource ?? Connection
-    : `${dataSource.name}DataSource`;
+      ? `${dataSource}DataSource`
+      : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
+        ? (DataSource ?? Connection)
+        : `${dataSource.name}DataSource`;
 }
 
 /** @deprecated */
@@ -128,10 +127,10 @@ export function getEntityManagerToken(
   return DEFAULT_DATA_SOURCE_NAME === dataSource
     ? EntityManager
     : 'string' === typeof dataSource
-    ? `${dataSource}EntityManager`
-    : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
-    ? EntityManager
-    : `${dataSource.name}EntityManager`;
+      ? `${dataSource}EntityManager`
+      : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
+        ? EntityManager
+        : `${dataSource.name}EntityManager`;
 }
 
 export function handleRetry(
@@ -178,4 +177,4 @@ export function getDataSourceName(options: DataSourceOptions): string {
   return options && options.name ? options.name : DEFAULT_DATA_SOURCE_NAME;
 }
 
-export const generateString = (): string => uuid();
+export const generateString = (): string => crypto.randomUUID();
