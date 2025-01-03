@@ -20,9 +20,6 @@ jobs:
       - image: cimg/node:21.6
     steps:
       - checkout
-      - run:
-          name: Update NPM version
-          command: sudo npm install -g npm@latest --ignore-scripts
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
