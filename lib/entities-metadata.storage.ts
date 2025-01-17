@@ -22,10 +22,10 @@ export class EntitiesMetadataStorage {
       this.storage.set(dataSourceToken, collection);
     }
     entities.forEach((entity) => {
-      if (collection!.includes(entity)) {
+      if (collection.includes(entity)) {
         return;
       }
-      collection!.push(entity);
+      collection.push(entity);
     });
   }
 

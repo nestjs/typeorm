@@ -234,7 +234,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
           } as DataSourceOptions);
         }
         // TODO: remove "dataSource.initialize" condition (left for backward compatibility)
-        return (dataSource as any).initialize && !dataSource.isInitialized && !options.manualInitialization
+        return (dataSource as any).initialize &&
+          !dataSource.isInitialized &&
+          !options.manualInitialization
           ? dataSource.initialize()
           : dataSource;
       }).pipe(

@@ -78,12 +78,12 @@ export function getDataSourceToken(
     | string = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function | Type<DataSource> {
   return DEFAULT_DATA_SOURCE_NAME === dataSource
-    ? DataSource ?? Connection
+    ? (DataSource ?? Connection)
     : 'string' === typeof dataSource
-    ? `${dataSource}DataSource`
-    : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
-    ? DataSource ?? Connection
-    : `${dataSource.name}DataSource`;
+      ? `${dataSource}DataSource`
+      : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
+        ? (DataSource ?? Connection)
+        : `${dataSource.name}DataSource`;
 }
 
 /** @deprecated */
@@ -128,10 +128,10 @@ export function getEntityManagerToken(
   return DEFAULT_DATA_SOURCE_NAME === dataSource
     ? EntityManager
     : 'string' === typeof dataSource
-    ? `${dataSource}EntityManager`
-    : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
-    ? EntityManager
-    : `${dataSource.name}EntityManager`;
+      ? `${dataSource}EntityManager`
+      : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
+        ? EntityManager
+        : `${dataSource.name}EntityManager`;
 }
 
 export function handleRetry(
