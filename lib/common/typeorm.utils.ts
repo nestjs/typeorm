@@ -10,7 +10,6 @@ import {
   EntitySchema,
   Repository,
 } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
 import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
@@ -178,4 +177,4 @@ export function getDataSourceName(options: DataSourceOptions): string {
   return options && options.name ? options.name : DEFAULT_DATA_SOURCE_NAME;
 }
 
-export const generateString = (): string => uuid();
+export const generateString = (): string => crypto.randomUUID();
