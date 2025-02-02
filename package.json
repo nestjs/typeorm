@@ -20,8 +20,8 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.6.1",
-    "@commitlint/config-angular": "19.7.0",
+    "@commitlint/cli": "19.7.1",
+    "@commitlint/config-angular": "19.7.1",
     "@eslint/eslintrc": "3.2.0",
     "@eslint/js": "9.19.0",
     "@nestjs/common": "11.0.7",
