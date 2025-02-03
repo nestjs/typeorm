@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Logger, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
@@ -177,4 +178,4 @@ export function getDataSourceName(options: DataSourceOptions): string {
   return options && options.name ? options.name : DEFAULT_DATA_SOURCE_NAME;
 }
 
-export const generateString = (): string => crypto.randomUUID();
+export const generateString = (): string => randomUUID();
