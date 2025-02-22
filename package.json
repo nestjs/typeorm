@@ -43,7 +43,7 @@
     "prettier": "3.5.2",
     "reflect-metadata": "0.2.2",
     "release-it": "18.1.2",
-    "rxjs": "7.8.1",
+    "rxjs": "7.8.2",
     "supertest": "7.0.0",
     "ts-jest": "29.2.5",
     "typeorm": "0.3.20",
