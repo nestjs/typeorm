@@ -21,6 +21,8 @@ const logger = new Logger('TypeOrmModule');
  * @param {EntityClassOrSchema} entity parameter can either be an Entity or Repository
  * @param {string} [dataSource='default'] DataSource name
  * @returns {string} The Entity | Repository injection token
+ *
+ * @publicApi
  */
 export function getRepositoryToken(
   entity: EntityClassOrSchema,
@@ -56,6 +58,8 @@ export function getRepositoryToken(
  * This function generates an injection token for an Entity or Repository
  * @param {Function} This parameter can either be an Entity or Repository
  * @returns {string} The Repository injection token
+ *
+ * @publicApi
  */
 export function getCustomRepositoryToken(repository: Function): string {
   if (repository === null || repository === undefined) {
@@ -69,6 +73,8 @@ export function getCustomRepositoryToken(repository: Function): string {
  * @param {DataSource | DataSourceOptions | string} [dataSource='default'] This optional parameter is either
  * a DataSource, or a DataSourceOptions or a string.
  * @returns {string | Function} The DataSource injection token.
+ *
+ * @publicApi
  */
 export function getDataSourceToken(
   dataSource:
@@ -85,7 +91,11 @@ export function getDataSourceToken(
         : `${dataSource.name}DataSource`;
 }
 
-/** @deprecated */
+/**
+ * @deprecated
+ *
+ * @publicApi
+ */
 export const getConnectionToken = getDataSourceToken;
 
 /**

@@ -10,6 +10,9 @@ import { TypeOrmCoreModule } from './typeorm-core.module';
 import { DEFAULT_DATA_SOURCE_NAME } from './typeorm.constants';
 import { createTypeOrmProviders } from './typeorm.providers';
 
+/**
+ * @publicApi
+ */
 @Module({})
 export class TypeOrmModule {
   static forRoot(options?: TypeOrmModuleOptions): DynamicModule {

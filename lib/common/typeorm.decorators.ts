@@ -8,11 +8,17 @@ import {
   getRepositoryToken,
 } from './typeorm.utils';
 
+/**
+ * @publicApi
+ */
 export const InjectRepository = (
   entity: EntityClassOrSchema,
   dataSource: string = DEFAULT_DATA_SOURCE_NAME,
 ): ReturnType<typeof Inject> => Inject(getRepositoryToken(entity, dataSource));
 
+/**
+ * @publicApi
+ */
 export const InjectDataSource: (
   dataSource?: DataSource | DataSourceOptions | string,
 ) => ReturnType<typeof Inject> = (
@@ -22,6 +28,9 @@ export const InjectDataSource: (
 /** @deprecated */
 export const InjectConnection = InjectDataSource;
 
+/**
+ * @publicApi
+ */
 export const InjectEntityManager: (
   dataSource?: DataSource | DataSourceOptions | string,
 ) => ReturnType<typeof Inject> = (
