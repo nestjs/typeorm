@@ -13,6 +13,7 @@ import {
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
 import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
+import * as crypto from 'crypto'
 
 const logger = new Logger('TypeOrmModule');
 
@@ -47,9 +48,8 @@ export function getRepositoryToken(
   }
 
   if (entity instanceof EntitySchema) {
-    return `${dataSourcePrefix}${
-      entity.options.target ? entity.options.target.name : entity.options.name
-    }Repository`;
+    return `${dataSourcePrefix}${entity.options.target ? entity.options.target.name : entity.options.name
+      }Repository`;
   }
   return `${dataSourcePrefix}${entity.name}Repository`;
 }
@@ -167,8 +167,7 @@ export function handleRetry(
               : '';
 
             logger.error(
-              `Unable to connect to the database${dataSourceInfo}.${verboseMessage} Retrying (${
-                errorCount + 1
+              `Unable to connect to the database${dataSourceInfo}.${verboseMessage} Retrying (${errorCount + 1
               })...`,
               error.stack,
             );
