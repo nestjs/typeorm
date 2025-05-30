@@ -42,7 +42,7 @@
     "pg": "8.16.0",
     "prettier": "3.5.3",
     "reflect-metadata": "0.2.2",
-    "release-it": "19.0.2",
+    "release-it": "19.0.3",
     "rxjs": "7.8.2",
     "supertest": "7.1.1",
     "ts-jest": "29.3.4",
