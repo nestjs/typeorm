@@ -7,7 +7,7 @@ aliases:
   - &install-deps
     run:
       name: Install dependencies
-      command: npm ci --ignore-scripts
+      command: npm install --ignore-scripts
   - &build-packages
     run:
       name: Build
@@ -17,17 +17,14 @@ jobs:
   build:
     working_directory: ~/nest
     docker:
-      - image: cimg/node:21.1
+      - image: cimg/node:22.14.0
     steps:
       - checkout
-      - run:
-          name: Update NPM version
-          command: sudo npm install -g npm@latest --ignore-scripts
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
-          command: npm ci --ignore-scripts
+          command: npm install --ignore-scripts
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
@@ -49,9 +46,9 @@ jobs:
       - run:
           name: Upgrade Node.js
           command: |
-            nvm install v16
+            nvm install v20
             node -v
-            nvm alias default v16
+            nvm alias default v20
       - run:
           name: Install Docker Compose
           command: |

@@ -1,6 +1,9 @@
 import { ModuleMetadata, Provider, Type } from '@nestjs/common';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
+/**
+ * @publicApi
+ */
 export type TypeOrmModuleOptions = {
   /**
    * Number of times to retry connecting
@@ -25,11 +28,6 @@ export type TypeOrmModuleOptions = {
    */
   autoLoadEntities?: boolean;
   /**
-   * If `true`, connection will not be closed on application shutdown.
-   * @deprecated
-   */
-  keepConnectionAlive?: boolean;
-  /**
    * If `true`, will show verbose error messages on each connection retry.
    */
   verboseRetryLog?: boolean;
@@ -42,16 +40,25 @@ export type TypeOrmModuleOptions = {
   manualInitialization?: boolean;
 } & Partial<DataSourceOptions>;
 
+/**
+ * @publicApi
+ */
 export interface TypeOrmOptionsFactory {
   createTypeOrmOptions(
     connectionName?: string,
   ): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
 }
 
+/**
+ * @publicApi
+ */
 export type TypeOrmDataSourceFactory = (
   options?: DataSourceOptions,
 ) => Promise<DataSource>;
 
+/**
+ * @publicApi
+ */
 export interface TypeOrmModuleAsyncOptions
   extends Pick<ModuleMetadata, 'imports'> {
   name?: string;

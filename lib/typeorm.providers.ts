@@ -10,13 +10,15 @@ export function createTypeOrmProviders(
   return (entities || []).map((entity) => ({
     provide: getRepositoryToken(entity, dataSource),
     useFactory: (entityManager: EntityManager) => {
-      const entityMetadata = entityManager.connection.entityMetadatas.find((meta) => meta.target === entity)
-      const isTreeEntity = typeof entityMetadata?.treeType !== 'undefined'
+      const entityMetadata = entityManager.connection.entityMetadatas.find(
+        (meta) => meta.target === entity,
+      );
+      const isTreeEntity = typeof entityMetadata?.treeType !== 'undefined';
       return isTreeEntity
-        ? entityManager.getTreeRepository(entity)
-        : entityManager.connection.options.type === 'mongodb'
-          ? entityManager.getMongoRepository(entity)
-          : entityManager.getRepository(entity);
+        ? dataSource.getTreeRepository(entity)
+        : dataSource.options.type === 'mongodb'
+          ? dataSource.getMongoRepository(entity)
+          : dataSource.getRepository(entity);
     },
     inject: [getEntityManagerToken(dataSource)],
     /**
