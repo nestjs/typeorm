@@ -45,7 +45,7 @@
     "release-it": "19.0.3",
     "rxjs": "7.8.2",
     "supertest": "7.1.1",
-    "ts-jest": "29.3.4",
+    "ts-jest": "29.4.0",
     "typeorm": "0.3.24",
     "typescript": "5.8.3",
     "typescript-eslint": "8.34.0"
