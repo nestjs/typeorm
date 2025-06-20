@@ -39,7 +39,7 @@
     "jest": "30.0.2",
     "lint-staged": "16.1.2",
     "mysql": "2.18.1",
-    "pg": "8.16.1",
+    "pg": "8.16.2",
     "prettier": "3.5.3",
     "reflect-metadata": "0.2.2",
     "release-it": "19.0.3",
