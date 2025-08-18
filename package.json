@@ -46,7 +46,7 @@
     "rxjs": "7.8.2",
     "supertest": "7.1.4",
     "ts-jest": "29.4.1",
-    "typeorm": "0.3.25",
+    "typeorm": "0.3.26",
     "typescript": "5.9.2",
     "typescript-eslint": "8.39.1"
   },
