@@ -48,7 +48,7 @@
     "ts-jest": "29.4.1",
     "typeorm": "0.3.26",
     "typescript": "5.9.2",
-    "typescript-eslint": "8.42.0"
+    "typescript-eslint": "8.43.0"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.0.0 || ^11.0.0",
