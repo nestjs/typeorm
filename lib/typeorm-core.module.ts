@@ -38,30 +38,24 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   private static readonly logger = new Logger('TypeOrmModule');
 
   private static validateDataSourceNames(
-    options: TypeOrmModuleOptions | TypeOrmModuleOptions[],
+    options: TypeOrmModuleOptions | TypeOrmModuleOptions[]
   ): void {
     const configs = Array.isArray(options) ? options : [options];
-    const names = new Map<string, number>();
+    const names = new Set<string>();
 
-    configs.forEach((config) => {
-      if (!config) {
-        return;
+    for (const config of configs) {
+      if (!config.name) {
+        continue;
       }
-      const name = (config as any).name || 'default';
-      const count = names.get(name) || 0;
-      names.set(name, count + 1);
-    });
-
-    const duplicates = Array.from(names.entries())
-      .filter(([_, occurrences]) => occurrences > 1)
-      .map(([name]) => name);
-
-    if (duplicates.length > 0) {
-      this.logger.warn(
-        `⚠️ WARNING: Duplicate DataSource names detected: [${duplicates.join(', ')}]. ` +
-          `Each DataSource should have a unique name to avoid conflicts.` +
-          `Multiple DataSources with default name will result in unexpected behaviour.`,
-      );
+      if (!names.has(config.name)) {
+        names.add(config.name);
+      } else {
+        this.logger.warn(
+          `⚠️ WARNING: Duplicate DataSource names detected: [${config.name}]. ` +
+            `Each DataSource should have a unique name to avoid conflicts.` +
+            `Multiple DataSources with default name will result in unexpected behaviour.`
+        );
+      }
     }
   }
 
