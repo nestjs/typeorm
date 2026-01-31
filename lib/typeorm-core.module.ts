@@ -35,7 +35,29 @@ import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
 @Global()
 @Module({})
 export class TypeOrmCoreModule implements OnApplicationShutdown {
-  private readonly logger = new Logger('TypeOrmModule');
+  private static readonly logger = new Logger('TypeOrmModule');
+
+  private static validateDataSourceNames(
+    options: TypeOrmModuleOptions | TypeOrmModuleOptions[]
+  ): void {
+    const configs = Array.isArray(options) ? options : [options];
+    const names = new Set<string>();
+
+    for (const config of configs) {
+      if (!config.name) {
+        continue;
+      }
+      if (!names.has(config.name)) {
+        names.add(config.name);
+      } else {
+        this.logger.warn(
+          `⚠️ WARNING: Duplicate DataSource names detected: [${config.name}]. ` +
+            `Each DataSource should have a unique name to avoid conflicts.` +
+            `Multiple DataSources with default name will result in unexpected behaviour.`
+        );
+      }
+    }
+  }
 
   constructor(
     @Inject(TYPEORM_MODULE_OPTIONS)
@@ -44,6 +66,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   ) {}
 
   static forRoot(options: TypeOrmModuleOptions = {}): DynamicModule {
+    this.validateDataSourceNames(options);
     const typeOrmModuleOptions = {
       provide: TYPEORM_MODULE_OPTIONS,
       useValue: options,
@@ -83,6 +106,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     const dataSourceProvider = {
       provide: getDataSourceToken(options as DataSourceOptions),
       useFactory: async (typeOrmOptions: TypeOrmModuleOptions) => {
+        this.validateDataSourceNames(typeOrmOptions);
         if (options.name) {
           return await this.createDataSourceFactory(
             {
@@ -147,7 +171,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         await dataSource.destroy();
       }
     } catch (e) {
-      this.logger.error(e?.message);
+      TypeOrmCoreModule.logger.error(e?.message);
     }
   }
 
