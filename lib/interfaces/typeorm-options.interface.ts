@@ -54,13 +54,16 @@ export interface TypeOrmOptionsFactory {
  */
 export type TypeOrmDataSourceFactory = (
   options?: DataSourceOptions,
+  ...injectedDeps: any[]
 ) => Promise<DataSource>;
 
 /**
  * @publicApi
  */
-export interface TypeOrmModuleAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface TypeOrmModuleAsyncOptions extends Pick<
+  ModuleMetadata,
+  'imports'
+> {
   name?: string;
   useExisting?: Type<TypeOrmOptionsFactory>;
   useClass?: Type<TypeOrmOptionsFactory>;
@@ -69,5 +72,6 @@ export interface TypeOrmModuleAsyncOptions
   ) => Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
   dataSourceFactory?: TypeOrmDataSourceFactory;
   inject?: any[];
+  dataSourceFactoryInject?: any[];
   extraProviders?: Provider[];
 }
