@@ -22,7 +22,7 @@
   "devDependencies": {
     "@commitlint/cli": "20.4.2",
     "@commitlint/config-angular": "20.4.2",
-    "@eslint/eslintrc": "3.3.3",
+    "@eslint/eslintrc": "3.3.4",
     "@eslint/js": "10.0.1",
     "@nestjs/common": "11.1.14",
     "@nestjs/core": "11.1.14",
