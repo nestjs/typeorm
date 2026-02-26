@@ -2,7 +2,7 @@ version: "3"
 
 services:
   postgres:
-    image: postgres:18.1
+    image: postgres:18.3
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
