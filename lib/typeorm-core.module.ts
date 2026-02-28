@@ -80,9 +80,13 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   }
 
   static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
+    const dataSourceFactoryInject = options.dataSourceFactoryInject || [];
     const dataSourceProvider = {
       provide: getDataSourceToken(options as DataSourceOptions),
-      useFactory: async (typeOrmOptions: TypeOrmModuleOptions) => {
+      useFactory: async (
+        typeOrmOptions: TypeOrmModuleOptions,
+        ...injectedDeps: any[]
+      ) => {
         if (options.name) {
           return await this.createDataSourceFactory(
             {
@@ -90,14 +94,16 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
               name: options.name,
             },
             options.dataSourceFactory,
+            injectedDeps,
           );
         }
         return await this.createDataSourceFactory(
           typeOrmOptions,
           options.dataSourceFactory,
+          injectedDeps,
         );
       },
-      inject: [TYPEORM_MODULE_OPTIONS],
+      inject: [TYPEORM_MODULE_OPTIONS, ...dataSourceFactoryInject],
     };
     const entityManagerProvider = {
       provide: getEntityManagerToken(options as DataSourceOptions) as string,
@@ -202,14 +208,15 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   private static async createDataSourceFactory(
     options: TypeOrmModuleOptions,
     dataSourceFactory?: TypeOrmDataSourceFactory,
+    injectedDeps: any[] = [],
   ): Promise<DataSource> {
     const dataSourceToken = getDataSourceName(options as DataSourceOptions);
-    const createTypeormDataSource =
+    const createTypeormDataSource: TypeOrmDataSourceFactory =
       dataSourceFactory ??
-      ((options: DataSourceOptions) => {
+      (async (options?: DataSourceOptions) => {
         return DataSource === undefined
-          ? createConnection(options)
-          : new DataSource(options);
+          ? createConnection(options!)
+          : new DataSource(options!);
       });
     return await lastValueFrom(
       defer(async () => {
@@ -217,6 +224,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         if (!options.autoLoadEntities) {
           dataSource = await createTypeormDataSource(
             options as DataSourceOptions,
+            ...injectedDeps,
           );
         } else {
           let entities = options.entities;
@@ -228,10 +236,13 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
             entities =
               EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken);
           }
-          dataSource = await createTypeormDataSource({
-            ...options,
-            entities,
-          } as DataSourceOptions);
+          dataSource = await createTypeormDataSource(
+            {
+              ...options,
+              entities,
+            } as DataSourceOptions,
+            ...injectedDeps,
+          );
         }
         // TODO: remove "dataSource.initialize" condition (left for backward compatibility)
         return (dataSource as any).initialize &&
