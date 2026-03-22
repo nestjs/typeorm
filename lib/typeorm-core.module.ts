@@ -208,8 +208,6 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       manualInitialization,
       ...dataSourceOptions
     } = options;
-    // Remove NestJS-level `name` property to prevent TypeORM v1 from choking on it
-    delete (dataSourceOptions as any).name;
 
     const createTypeormDataSource =
       dataSourceFactory ??
