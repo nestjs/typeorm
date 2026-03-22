@@ -14,16 +14,10 @@ import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
 
 // Runtime resolution for backward compat with typeorm 0.3.x
 // These exports were removed in TypeORM 1.0.0
-let Connection: Function | undefined;
-let AbstractRepository: Function | undefined;
-try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const typeormModule = require('typeorm');
-  Connection = typeormModule.Connection;
-  AbstractRepository = typeormModule.AbstractRepository;
-} catch {
-  // TypeORM 1.0+ doesn't export these
-}
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const typeormModule = require('typeorm');
+const Connection = typeormModule.Connection || typeormModule.DataSource;
+const AbstractRepository = typeormModule.AbstractRepository;
 
 const logger = new Logger('TypeOrmModule');
 
