@@ -1,5 +1,6 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
+import { DEFAULT_DATA_SOURCE_NAME } from './typeorm.constants';
 
 type DataSourceToken = DataSource | DataSourceOptions | string;
 
@@ -11,7 +12,9 @@ export class EntitiesMetadataStorage {
     entities: EntityClassOrSchema[],
   ): void {
     const dataSourceToken =
-      typeof dataSource === 'string' ? dataSource : dataSource.name;
+      typeof dataSource === 'string'
+        ? dataSource
+        : (dataSource as any).name || DEFAULT_DATA_SOURCE_NAME;
     if (!dataSourceToken) {
       return;
     }
@@ -33,7 +36,9 @@ export class EntitiesMetadataStorage {
     dataSource: DataSourceToken,
   ): EntityClassOrSchema[] {
     const dataSourceToken =
-      typeof dataSource === 'string' ? dataSource : dataSource.name;
+      typeof dataSource === 'string'
+        ? dataSource
+        : (dataSource as any).name || DEFAULT_DATA_SOURCE_NAME;
 
     if (!dataSourceToken) {
       return [];

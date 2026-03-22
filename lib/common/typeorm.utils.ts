@@ -2,8 +2,6 @@ import { Logger, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
 import {
-  AbstractRepository,
-  Connection,
   DataSource,
   DataSourceOptions,
   EntityManager,
@@ -13,6 +11,19 @@ import {
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
 import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
+
+// Runtime resolution for backward compat with typeorm 0.3.x
+// These exports were removed in TypeORM 1.0.0
+let Connection: Function | undefined;
+let AbstractRepository: Function | undefined;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const typeormModule = require('typeorm');
+  Connection = typeormModule.Connection;
+  AbstractRepository = typeormModule.AbstractRepository;
+} catch {
+  // TypeORM 1.0+ doesn't export these
+}
 
 const logger = new Logger('TypeOrmModule');
 
@@ -38,7 +49,7 @@ export function getRepositoryToken(
   if (
     entity instanceof Function &&
     (entity.prototype instanceof Repository ||
-      entity.prototype instanceof AbstractRepository)
+      (AbstractRepository && entity.prototype instanceof AbstractRepository))
   ) {
     if (!dataSourcePrefix) {
       return entity;
@@ -83,12 +94,13 @@ export function getDataSourceToken(
     | string = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function | Type<DataSource> {
   return DEFAULT_DATA_SOURCE_NAME === dataSource
-    ? (DataSource ?? Connection)
+    ? DataSource
     : 'string' === typeof dataSource
       ? `${dataSource}DataSource`
-      : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
-        ? (DataSource ?? Connection)
-        : `${dataSource.name}DataSource`;
+      : DEFAULT_DATA_SOURCE_NAME === (dataSource as any).name ||
+          !(dataSource as any).name
+        ? DataSource
+        : `${(dataSource as any).name}DataSource`;
 }
 
 /**
@@ -116,10 +128,13 @@ export function getDataSourcePrefix(
   if (typeof dataSource === 'string') {
     return dataSource + '_';
   }
-  if (dataSource.name === DEFAULT_DATA_SOURCE_NAME || !dataSource.name) {
+  if (
+    (dataSource as any).name === DEFAULT_DATA_SOURCE_NAME ||
+    !(dataSource as any).name
+  ) {
     return '';
   }
-  return dataSource.name + '_';
+  return (dataSource as any).name + '_';
 }
 
 /**
@@ -138,9 +153,10 @@ export function getEntityManagerToken(
     ? EntityManager
     : 'string' === typeof dataSource
       ? `${dataSource}EntityManager`
-      : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
+      : DEFAULT_DATA_SOURCE_NAME === (dataSource as any).name ||
+          !(dataSource as any).name
         ? EntityManager
-        : `${dataSource.name}EntityManager`;
+        : `${(dataSource as any).name}EntityManager`;
 }
 
 export function handleRetry(
@@ -183,8 +199,10 @@ export function handleRetry(
     );
 }
 
-export function getDataSourceName(options: DataSourceOptions): string {
+export function getDataSourceName(options: Record<string, any>): string {
   return options && options.name ? options.name : DEFAULT_DATA_SOURCE_NAME;
 }
 
 export const generateString = (): string => crypto.randomUUID();
+
+export { Connection };

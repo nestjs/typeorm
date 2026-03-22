@@ -10,13 +10,9 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer, lastValueFrom } from 'rxjs';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import {
   Connection,
-  createConnection,
-  DataSource,
-  DataSourceOptions,
-} from 'typeorm';
-import {
   generateString,
   getDataSourceName,
   getDataSourceToken,
@@ -63,13 +59,12 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     ];
     const exports = [entityManagerProvider, dataSourceProvider];
 
-    // TODO: "Connection" class is going to be removed in the next version of "typeorm"
-    if (dataSourceProvider.provide === DataSource) {
+    if (Connection && dataSourceProvider.provide === DataSource) {
       providers.push({
-        provide: Connection,
+        provide: Connection as any,
         useExisting: DataSource,
       });
-      exports.push(Connection);
+      exports.push(Connection as any);
     }
 
     return {
@@ -121,13 +116,12 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       dataSourceProvider,
     ];
 
-    // TODO: "Connection" class is going to be removed in the next version of "typeorm"
-    if (dataSourceProvider.provide === DataSource) {
+    if (Connection && dataSourceProvider.provide === DataSource) {
       providers.push({
-        provide: Connection,
+        provide: Connection as any,
         useExisting: DataSource,
       });
-      exports.push(Connection);
+      exports.push(Connection as any);
     }
 
     return {
@@ -204,22 +198,32 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     dataSourceFactory?: TypeOrmDataSourceFactory,
   ): Promise<DataSource> {
     const dataSourceToken = getDataSourceName(options as DataSourceOptions);
+
+    const {
+      retryAttempts,
+      retryDelay,
+      toRetry,
+      autoLoadEntities,
+      verboseRetryLog,
+      manualInitialization,
+      ...dataSourceOptions
+    } = options;
+    // Remove NestJS-level `name` property to prevent TypeORM v1 from choking on it
+    delete (dataSourceOptions as any).name;
+
     const createTypeormDataSource =
       dataSourceFactory ??
-      ((options: DataSourceOptions) => {
-        return DataSource === undefined
-          ? createConnection(options)
-          : new DataSource(options);
-      });
+      ((options: DataSourceOptions) => new DataSource(options));
+
     return await lastValueFrom(
       defer(async () => {
         let dataSource: DataSource;
-        if (!options.autoLoadEntities) {
+        if (!autoLoadEntities) {
           dataSource = await createTypeormDataSource(
-            options as DataSourceOptions,
+            dataSourceOptions as DataSourceOptions,
           );
         } else {
-          let entities = options.entities;
+          let entities = dataSourceOptions.entities;
           if (Array.isArray(entities)) {
             entities = entities.concat(
               EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken),
@@ -229,23 +233,20 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
               EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken);
           }
           dataSource = await createTypeormDataSource({
-            ...options,
+            ...dataSourceOptions,
             entities,
           } as DataSourceOptions);
         }
-        // TODO: remove "dataSource.initialize" condition (left for backward compatibility)
-        return (dataSource as any).initialize &&
-          !dataSource.isInitialized &&
-          !options.manualInitialization
+        return !dataSource.isInitialized && !manualInitialization
           ? dataSource.initialize()
           : dataSource;
       }).pipe(
         handleRetry(
-          options.retryAttempts,
-          options.retryDelay,
+          retryAttempts,
+          retryDelay,
           dataSourceToken,
-          options.verboseRetryLog,
-          options.toRetry,
+          verboseRetryLog,
+          toRetry,
         ),
       ),
     );
