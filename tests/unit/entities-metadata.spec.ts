@@ -28,11 +28,11 @@ describe('EntitiesMetadataStorage', () => {
       ).toEqual([EntityA]);
     });
 
-    it('should use default name when options have no name', () => {
+    it('should skip when options have no name', () => {
       EntitiesMetadataStorage.addEntitiesByDataSource({} as any, [EntityA]);
       expect(
         EntitiesMetadataStorage.getEntitiesByDataSource('default'),
-      ).toEqual([EntityA]);
+      ).toEqual([]);
     });
 
     it('should accumulate entities for the same datasource', () => {
@@ -82,11 +82,11 @@ describe('EntitiesMetadataStorage', () => {
       ).toEqual([EntityA]);
     });
 
-    it('should use default name when options have no name', () => {
+    it('should return empty when options have no name', () => {
       EntitiesMetadataStorage.addEntitiesByDataSource('default', [EntityA]);
       expect(
         EntitiesMetadataStorage.getEntitiesByDataSource({} as any),
-      ).toEqual([EntityA]);
+      ).toEqual([]);
     });
   });
 });
