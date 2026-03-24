@@ -2,6 +2,7 @@ import { Logger, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
 import {
+  AbstractRepository,
   DataSource,
   DataSourceOptions,
   EntityManager,
@@ -11,13 +12,6 @@ import {
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
 import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
-
-// Runtime resolution for backward compat with typeorm 0.3.x
-// These exports were removed in TypeORM 1.0.0
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const typeormModule = require('typeorm');
-const Connection = typeormModule.Connection;
-const AbstractRepository = typeormModule.AbstractRepository;
 
 const logger = new Logger('TypeOrmModule');
 
@@ -198,5 +192,3 @@ export function getDataSourceName(options: Record<string, any>): string {
 }
 
 export const generateString = (): string => crypto.randomUUID();
-
-export { Connection };

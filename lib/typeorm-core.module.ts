@@ -10,9 +10,8 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer, lastValueFrom } from 'rxjs';
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { Connection, DataSource, DataSourceOptions } from 'typeorm';
 import {
-  Connection,
   generateString,
   getDataSourceName,
   getDataSourceToken,
