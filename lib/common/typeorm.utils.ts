@@ -85,10 +85,10 @@ export function getDataSourceToken(
     ? DataSource
     : 'string' === typeof dataSource
       ? `${dataSource}DataSource`
-      : DEFAULT_DATA_SOURCE_NAME === (dataSource as any).name ||
-          !(dataSource as any).name
+      : DEFAULT_DATA_SOURCE_NAME === dataSource.name ||
+          !dataSource.name
         ? DataSource
-        : `${(dataSource as any).name}DataSource`;
+        : `${dataSource.name}DataSource`;
 }
 
 /**
@@ -117,12 +117,12 @@ export function getDataSourcePrefix(
     return dataSource + '_';
   }
   if (
-    (dataSource as any).name === DEFAULT_DATA_SOURCE_NAME ||
-    !(dataSource as any).name
+    dataSource.name === DEFAULT_DATA_SOURCE_NAME ||
+    !dataSource.name
   ) {
     return '';
   }
-  return (dataSource as any).name + '_';
+  return dataSource.name + '_';
 }
 
 /**
@@ -141,10 +141,10 @@ export function getEntityManagerToken(
     ? EntityManager
     : 'string' === typeof dataSource
       ? `${dataSource}EntityManager`
-      : DEFAULT_DATA_SOURCE_NAME === (dataSource as any).name ||
-          !(dataSource as any).name
+      : DEFAULT_DATA_SOURCE_NAME === dataSource.name ||
+          !dataSource.name
         ? EntityManager
-        : `${(dataSource as any).name}EntityManager`;
+        : `${dataSource.name}EntityManager`;
 }
 
 export function handleRetry(
@@ -187,7 +187,7 @@ export function handleRetry(
     );
 }
 
-export function getDataSourceName(options: Record<string, any>): string {
+export function getDataSourceName(options: { name?: string }): string {
   return options && options.name ? options.name : DEFAULT_DATA_SOURCE_NAME;
 }
 

@@ -14,7 +14,7 @@ export class EntitiesMetadataStorage {
     const dataSourceToken =
       typeof dataSource === 'string'
         ? dataSource
-        : (dataSource as any).name || DEFAULT_DATA_SOURCE_NAME;
+        : dataSource.name || DEFAULT_DATA_SOURCE_NAME;
     if (!dataSourceToken) {
       return;
     }
@@ -38,7 +38,7 @@ export class EntitiesMetadataStorage {
     const dataSourceToken =
       typeof dataSource === 'string'
         ? dataSource
-        : (dataSource as any).name || DEFAULT_DATA_SOURCE_NAME;
+        : dataSource.name || DEFAULT_DATA_SOURCE_NAME;
 
     if (!dataSourceToken) {
       return [];
