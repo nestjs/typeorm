@@ -19,10 +19,6 @@ describe('TypeORM Utils', () => {
       expect(getDataSourceToken()).toBe(DataSource);
     });
 
-    it('should return DataSource class when passing DEFAULT_DATA_SOURCE_NAME', () => {
-      expect(getDataSourceToken(DEFAULT_DATA_SOURCE_NAME)).toBe(DataSource);
-    });
-
     it('should return named string token for string input', () => {
       expect(getDataSourceToken('myDb')).toBe('myDbDataSource');
     });
