@@ -61,10 +61,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
 
     if (Connection && dataSourceProvider.provide === DataSource) {
       providers.push({
-        provide: Connection as any,
+        provide: Connection,
         useExisting: DataSource,
       });
-      exports.push(Connection as any);
+      exports.push(Connection);
     }
 
     return {
@@ -118,10 +118,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
 
     if (Connection && dataSourceProvider.provide === DataSource) {
       providers.push({
-        provide: Connection as any,
+        provide: Connection,
         useExisting: DataSource,
       });
-      exports.push(Connection as any);
+      exports.push(Connection);
     }
 
     return {
@@ -198,30 +198,18 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     dataSourceFactory?: TypeOrmDataSourceFactory,
   ): Promise<DataSource> {
     const dataSourceToken = getDataSourceName(options as DataSourceOptions);
-
-    const {
-      retryAttempts,
-      retryDelay,
-      toRetry,
-      autoLoadEntities,
-      verboseRetryLog,
-      manualInitialization,
-      ...dataSourceOptions
-    } = options;
-
     const createTypeormDataSource =
       dataSourceFactory ??
       ((options: DataSourceOptions) => new DataSource(options));
-
     return await lastValueFrom(
       defer(async () => {
         let dataSource: DataSource;
-        if (!autoLoadEntities) {
+        if (!options.autoLoadEntities) {
           dataSource = await createTypeormDataSource(
-            dataSourceOptions as DataSourceOptions,
+            options as DataSourceOptions,
           );
         } else {
-          let entities = dataSourceOptions.entities;
+          let entities = options.entities;
           if (Array.isArray(entities)) {
             entities = entities.concat(
               EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken),
@@ -231,20 +219,20 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
               EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken);
           }
           dataSource = await createTypeormDataSource({
-            ...dataSourceOptions,
+            ...options,
             entities,
           } as DataSourceOptions);
         }
-        return !dataSource.isInitialized && !manualInitialization
+        return !dataSource.isInitialized && !options.manualInitialization
           ? dataSource.initialize()
           : dataSource;
       }).pipe(
         handleRetry(
-          retryAttempts,
-          retryDelay,
+          options.retryAttempts,
+          options.retryDelay,
           dataSourceToken,
-          verboseRetryLog,
-          toRetry,
+          options.verboseRetryLog,
+          options.toRetry,
         ),
       ),
     );

@@ -16,7 +16,7 @@ import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
 // These exports were removed in TypeORM 1.0.0
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const typeormModule = require('typeorm');
-const Connection = typeormModule.Connection || typeormModule.DataSource;
+const Connection = typeormModule.Connection;
 const AbstractRepository = typeormModule.AbstractRepository;
 
 const logger = new Logger('TypeOrmModule');
