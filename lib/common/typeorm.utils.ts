@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
 import {
   AbstractRepository,
-  Connection,
   DataSource,
   DataSourceOptions,
   EntityManager,
@@ -38,7 +37,7 @@ export function getRepositoryToken(
   if (
     entity instanceof Function &&
     (entity.prototype instanceof Repository ||
-      entity.prototype instanceof AbstractRepository)
+      (AbstractRepository && entity.prototype instanceof AbstractRepository))
   ) {
     if (!dataSourcePrefix) {
       return entity;
@@ -83,11 +82,12 @@ export function getDataSourceToken(
     | string = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function | Type<DataSource> {
   return DEFAULT_DATA_SOURCE_NAME === dataSource
-    ? (DataSource ?? Connection)
+    ? DataSource
     : 'string' === typeof dataSource
       ? `${dataSource}DataSource`
-      : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
-        ? (DataSource ?? Connection)
+      : DEFAULT_DATA_SOURCE_NAME === dataSource.name ||
+          !dataSource.name
+        ? DataSource
         : `${dataSource.name}DataSource`;
 }
 
@@ -116,7 +116,10 @@ export function getDataSourcePrefix(
   if (typeof dataSource === 'string') {
     return dataSource + '_';
   }
-  if (dataSource.name === DEFAULT_DATA_SOURCE_NAME || !dataSource.name) {
+  if (
+    dataSource.name === DEFAULT_DATA_SOURCE_NAME ||
+    !dataSource.name
+  ) {
     return '';
   }
   return dataSource.name + '_';
@@ -138,7 +141,8 @@ export function getEntityManagerToken(
     ? EntityManager
     : 'string' === typeof dataSource
       ? `${dataSource}EntityManager`
-      : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
+      : DEFAULT_DATA_SOURCE_NAME === dataSource.name ||
+          !dataSource.name
         ? EntityManager
         : `${dataSource.name}EntityManager`;
 }
@@ -183,7 +187,7 @@ export function handleRetry(
     );
 }
 
-export function getDataSourceName(options: DataSourceOptions): string {
+export function getDataSourceName(options: { name?: string }): string {
   return options && options.name ? options.name : DEFAULT_DATA_SOURCE_NAME;
 }
 

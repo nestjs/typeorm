@@ -10,12 +10,7 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer, lastValueFrom } from 'rxjs';
-import {
-  Connection,
-  createConnection,
-  DataSource,
-  DataSourceOptions,
-} from 'typeorm';
+import { Connection, DataSource, DataSourceOptions } from 'typeorm';
 import {
   generateString,
   getDataSourceName,
@@ -63,8 +58,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     ];
     const exports = [entityManagerProvider, dataSourceProvider];
 
-    // TODO: "Connection" class is going to be removed in the next version of "typeorm"
-    if (dataSourceProvider.provide === DataSource) {
+    if (Connection && dataSourceProvider.provide === DataSource) {
       providers.push({
         provide: Connection,
         useExisting: DataSource,
@@ -121,8 +115,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       dataSourceProvider,
     ];
 
-    // TODO: "Connection" class is going to be removed in the next version of "typeorm"
-    if (dataSourceProvider.provide === DataSource) {
+    if (Connection && dataSourceProvider.provide === DataSource) {
       providers.push({
         provide: Connection,
         useExisting: DataSource,
@@ -206,11 +199,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     const dataSourceToken = getDataSourceName(options as DataSourceOptions);
     const createTypeormDataSource =
       dataSourceFactory ??
-      ((options: DataSourceOptions) => {
-        return DataSource === undefined
-          ? createConnection(options)
-          : new DataSource(options);
-      });
+      ((options: DataSourceOptions) => new DataSource(options));
     return await lastValueFrom(
       defer(async () => {
         let dataSource: DataSource;
@@ -233,10 +222,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
             entities,
           } as DataSourceOptions);
         }
-        // TODO: remove "dataSource.initialize" condition (left for backward compatibility)
-        return (dataSource as any).initialize &&
-          !dataSource.isInitialized &&
-          !options.manualInitialization
+        return !dataSource.isInitialized && !options.manualInitialization
           ? dataSource.initialize()
           : dataSource;
       }).pipe(
