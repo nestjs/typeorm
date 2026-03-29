@@ -2,14 +2,17 @@ import { Logger, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
 import {
-  AbstractRepository,
-  Connection,
   DataSource,
   DataSourceOptions,
   EntityManager,
   EntitySchema,
   Repository,
 } from 'typeorm';
+
+// Backward compatibility: AbstractRepository was removed in TypeORM v1.0.0
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const AbstractRepository: Function | undefined =
+  require('typeorm').AbstractRepository;
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
 import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
@@ -38,7 +41,7 @@ export function getRepositoryToken(
   if (
     entity instanceof Function &&
     (entity.prototype instanceof Repository ||
-      entity.prototype instanceof AbstractRepository)
+      (AbstractRepository && entity.prototype instanceof AbstractRepository))
   ) {
     if (!dataSourcePrefix) {
       return entity;
@@ -83,11 +86,11 @@ export function getDataSourceToken(
     | string = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function | Type<DataSource> {
   return DEFAULT_DATA_SOURCE_NAME === dataSource
-    ? (DataSource ?? Connection)
+    ? DataSource
     : 'string' === typeof dataSource
       ? `${dataSource}DataSource`
       : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
-        ? (DataSource ?? Connection)
+        ? DataSource
         : `${dataSource.name}DataSource`;
 }
 
