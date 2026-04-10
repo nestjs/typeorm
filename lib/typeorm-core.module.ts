@@ -139,7 +139,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       if (dataSource && dataSource.isInitialized) {
         await dataSource.destroy();
       }
-    } catch (e) {
+    } catch (e: any) {
       this.logger.error(e?.message);
     }
   }

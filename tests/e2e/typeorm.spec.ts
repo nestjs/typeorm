@@ -1,8 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import * as request from 'supertest';
-import { ApplicationModule } from '../src/app.module';
 import { Server } from 'http';
+import request from 'supertest';
+import { ApplicationModule } from '../src/app.module';
 
 describe('TypeOrm', () => {
   let server: Server;
