@@ -26,7 +26,7 @@
     "@nestjs/core": "11.1.18",
     "@nestjs/platform-express": "11.1.18",
     "@nestjs/testing": "11.1.18",
-    "@types/node": "24.12.0",
+    "@types/node": "24.12.2",
     "@types/supertest": "7.2.0",
     "husky": "9.1.7",
     "lint-staged": "16.4.0",
