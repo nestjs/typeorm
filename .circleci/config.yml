@@ -46,9 +46,9 @@ jobs:
       - run:
           name: Upgrade Node.js
           command: |
-            nvm install v20
+            nvm install v24
             node -v
-            nvm alias default v20
+            nvm alias default v24
       - run:
           name: Install Docker Compose
           command: |
