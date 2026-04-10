@@ -7,7 +7,7 @@ aliases:
   - &install-deps
     run:
       name: Install dependencies
-      command: npm install --ignore-scripts
+      command: npm install
   - &build-packages
     run:
       name: Build
@@ -24,7 +24,7 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
-          command: npm install --ignore-scripts
+          command: npm install
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
@@ -55,7 +55,9 @@ jobs:
             curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
             chmod +x ~/docker-compose
             sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      - *install-deps
+      - run:
+          name: Install dependencies
+          command: rm -f package-lock.json && npm install
       - run:
           name: Prepare
           command: |
