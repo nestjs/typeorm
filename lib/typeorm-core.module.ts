@@ -18,6 +18,7 @@ import {
   getEntityManagerToken,
   handleRetry,
 } from './common/typeorm.utils';
+import { DataSourceNameRegistry } from './data-source-name.registry';
 import { EntitiesMetadataStorage } from './entities-metadata.storage';
 import {
   TypeOrmDataSourceFactory,
@@ -39,6 +40,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   ) {}
 
   static forRoot(options: TypeOrmModuleOptions = {}): DynamicModule {
+    DataSourceNameRegistry.register(
+      getDataSourceName(options as DataSourceOptions),
+    );
     const typeOrmModuleOptions = {
       provide: TYPEORM_MODULE_OPTIONS,
       useValue: options,
@@ -74,6 +78,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   }
 
   static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
+    if (options.name) {
+      DataSourceNameRegistry.register(options.name);
+    }
     const dataSourceProvider = {
       provide: getDataSourceToken(options as DataSourceOptions),
       useFactory: async (typeOrmOptions: TypeOrmModuleOptions) => {
@@ -141,6 +148,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       }
     } catch (e: any) {
       this.logger.error(e?.message);
+    } finally {
+      DataSourceNameRegistry.unregister(
+        getDataSourceName(this.options as DataSourceOptions),
+      );
     }
   }
 
