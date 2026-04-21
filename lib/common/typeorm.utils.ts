@@ -2,7 +2,6 @@ import { Logger, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
 import {
-  AbstractRepository,
   DataSource,
   DataSourceOptions,
   EntityManager,
@@ -12,6 +11,7 @@ import {
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
 import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
+import { AbstractRepository } from './typeorm-compat';
 
 const logger = new Logger('TypeOrmModule');
 
@@ -85,8 +85,7 @@ export function getDataSourceToken(
     ? DataSource
     : 'string' === typeof dataSource
       ? `${dataSource}DataSource`
-      : DEFAULT_DATA_SOURCE_NAME === dataSource.name ||
-          !dataSource.name
+      : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
         ? DataSource
         : `${dataSource.name}DataSource`;
 }
@@ -116,10 +115,7 @@ export function getDataSourcePrefix(
   if (typeof dataSource === 'string') {
     return dataSource + '_';
   }
-  if (
-    dataSource.name === DEFAULT_DATA_SOURCE_NAME ||
-    !dataSource.name
-  ) {
+  if (dataSource.name === DEFAULT_DATA_SOURCE_NAME || !dataSource.name) {
     return '';
   }
   return dataSource.name + '_';
@@ -141,8 +137,7 @@ export function getEntityManagerToken(
     ? EntityManager
     : 'string' === typeof dataSource
       ? `${dataSource}EntityManager`
-      : DEFAULT_DATA_SOURCE_NAME === dataSource.name ||
-          !dataSource.name
+      : DEFAULT_DATA_SOURCE_NAME === dataSource.name || !dataSource.name
         ? EntityManager
         : `${dataSource.name}EntityManager`;
 }
