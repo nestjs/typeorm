@@ -15,10 +15,20 @@ import { createTypeOrmProviders } from './typeorm.providers';
  */
 @Module({})
 export class TypeOrmModule {
-  static forRoot(options?: TypeOrmModuleOptions): DynamicModule {
+  /**
+   * Registers the TypeORM module with the given options.
+   *
+   * @param options The TypeORM data source options.
+   * @param name Optional data source name. When provided, it overrides
+   * `options.name` (if any) so the data source name can be configured
+   * separately from the connection options – mirroring `forRootAsync`.
+   */
+  static forRoot(options?: TypeOrmModuleOptions, name?: string): DynamicModule {
+    const resolvedOptions =
+      name !== undefined ? { ...(options ?? {}), name } : options;
     return {
       module: TypeOrmModule,
-      imports: [TypeOrmCoreModule.forRoot(options)],
+      imports: [TypeOrmCoreModule.forRoot(resolvedOptions)],
     };
   }
 
