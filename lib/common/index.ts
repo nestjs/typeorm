@@ -1,2 +1,2 @@
-export * from './typeorm.decorators';
-export * from './typeorm.utils';
+export * from './typeorm.decorators.js';
+export * from './typeorm.utils.js';
