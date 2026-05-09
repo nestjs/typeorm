@@ -38,7 +38,7 @@
     "release-it": "20.0.1",
     "rxjs": "7.8.2",
     "supertest": "7.2.2",
-    "typeorm": "0.3.28",
+    "typeorm": "0.3.29",
     "typescript": "~6.0.2",
     "vitest": "4.1.5"
   },
