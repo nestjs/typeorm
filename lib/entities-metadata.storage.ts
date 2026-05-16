@@ -1,5 +1,5 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
+import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type.js';
 
 type DataSourceToken = DataSource | DataSourceOptions | string;
 

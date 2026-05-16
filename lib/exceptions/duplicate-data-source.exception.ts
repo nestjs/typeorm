@@ -1,4 +1,4 @@
-import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
+import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants.js';
 
 export class DuplicateDataSourceException extends Error {
   constructor(dataSourceName: string) {
