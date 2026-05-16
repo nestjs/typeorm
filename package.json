@@ -29,7 +29,7 @@
     "@types/node": "24.12.4",
     "@types/supertest": "7.2.0",
     "husky": "9.1.7",
-    "lint-staged": "17.0.4",
+    "lint-staged": "17.0.5",
     "mysql": "2.18.1",
     "oxlint": "1.65.0",
     "pg": "8.20.0",
