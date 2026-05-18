@@ -32,7 +32,7 @@
     "lint-staged": "17.0.5",
     "mysql": "2.18.1",
     "oxlint": "1.65.0",
-    "pg": "8.20.0",
+    "pg": "8.21.0",
     "prettier": "3.8.3",
     "reflect-metadata": "0.2.2",
     "release-it": "20.0.1",
