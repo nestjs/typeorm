@@ -35,7 +35,8 @@ jobs:
 
   integration_tests:
     working_directory: ~/nest
-    machine: true
+    machine:
+      image: ubuntu-2404:2026.05.1
     steps:
       - checkout
       - run:
@@ -50,18 +51,12 @@ jobs:
             node -v
             nvm alias default v24
       - run:
-          name: Install Docker Compose
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      - run:
           name: Install dependencies
           command: rm -f package-lock.json && npm install
       - run:
           name: Prepare
           command: |
-            docker-compose up -d
+            docker compose up -d
             sleep 10
       - run:
           name: List containers
