@@ -1,14 +1,14 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { EntitiesMetadataStorage } from './entities-metadata.storage';
-import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
+import { EntitiesMetadataStorage } from './entities-metadata.storage.js';
+import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type.js';
 import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
-} from './interfaces/typeorm-options.interface';
-import { TypeOrmCoreModule } from './typeorm-core.module';
-import { DEFAULT_DATA_SOURCE_NAME } from './typeorm.constants';
-import { createTypeOrmProviders } from './typeorm.providers';
+} from './interfaces/typeorm-options.interface.js';
+import { TypeOrmCoreModule } from './typeorm-core.module.js';
+import { DEFAULT_DATA_SOURCE_NAME } from './typeorm.constants.js';
+import { createTypeOrmProviders } from './typeorm.providers.js';
 
 /**
  * @publicApi

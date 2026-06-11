@@ -64,8 +64,10 @@ export type TypeOrmDataSourceFactory = (
 /**
  * @publicApi
  */
-export interface TypeOrmModuleAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+export interface TypeOrmModuleAsyncOptions extends Pick<
+  ModuleMetadata,
+  'imports'
+> {
   name?: string;
   useExisting?: Type<TypeOrmOptionsFactory>;
   useClass?: Type<TypeOrmOptionsFactory>;

@@ -11,23 +11,23 @@ import {
 import { ModuleRef } from '@nestjs/core';
 import { defer, lastValueFrom } from 'rxjs';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { Connection } from './common/typeorm-compat';
+import { Connection } from './common/typeorm-compat.js';
 import {
   generateString,
   getDataSourceName,
   getDataSourceToken,
   getEntityManagerToken,
   handleRetry,
-} from './common/typeorm.utils';
-import { DataSourceNameRegistry } from './data-source-name.registry';
-import { EntitiesMetadataStorage } from './entities-metadata.storage';
+} from './common/typeorm.utils.js';
+import { DataSourceNameRegistry } from './data-source-name.registry.js';
+import { EntitiesMetadataStorage } from './entities-metadata.storage.js';
 import {
   TypeOrmDataSourceFactory,
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
-} from './interfaces/typeorm-options.interface';
-import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
+} from './interfaces/typeorm-options.interface.js';
+import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants.js';
 
 @Global()
 @Module({})

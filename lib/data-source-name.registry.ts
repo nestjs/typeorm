@@ -1,4 +1,4 @@
-import { DuplicateDataSourceException } from './exceptions/duplicate-data-source.exception';
+import { DuplicateDataSourceException } from './exceptions/duplicate-data-source.exception.js';
 
 /**
  * Tracks active data source names at runtime in order to prevent multiple

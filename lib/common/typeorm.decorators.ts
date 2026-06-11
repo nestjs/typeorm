@@ -1,12 +1,12 @@
 import { Inject } from '@nestjs/common';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
-import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
+import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type.js';
+import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants.js';
 import {
   getDataSourceToken,
   getEntityManagerToken,
   getRepositoryToken,
-} from './typeorm.utils';
+} from './typeorm.utils.js';
 
 /**
  * @publicApi
