@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm install
+      - run: npm run build
+
+  e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Verify the suite passes against both supported TypeORM majors.
+        typeorm-version: ['0.3.x', '1.0.0']
+    services:
+      postgres:
+        image: postgres:18.1
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: test
+        # Match the host/port the test fixtures connect to (host 3306 -> pg 5432).
+        ports:
+          - 3306:5432
+        options: >-
+          --health-cmd "pg_isready -U root -d test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Pin TypeORM ${{ matrix.typeorm-version }}
+        run: npm pkg set devDependencies.typeorm="${{ matrix.typeorm-version }}"
+      - name: Install dependencies
+        run: rm -f package-lock.json && npm install
+      - name: Report installed TypeORM version
+        # `require('typeorm/package.json')` is blocked by TypeORM's exports map
+        # (both 0.3.x and v1), so read the manifest from disk directly.
+        run: node -e "console.log('typeorm', JSON.parse(require('fs').readFileSync('./node_modules/typeorm/package.json','utf8')).version)"
+      - name: e2e tests
+        run: npm run test:e2e
