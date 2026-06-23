@@ -1,3 +1,5 @@
+import { createRequire } from 'node:module';
+
 /**
  * Runtime compatibility helpers for accessing TypeORM APIs that were
  * removed in TypeORM v1.0.0 (notably `Connection` and `AbstractRepository`).
@@ -17,9 +19,11 @@
  * package. Returns `undefined` when the export is not present (e.g.
  * TypeORM v1.0.0 has removed it) or when the module fails to load.
  */
+const require = createRequire(import.meta.url);
+
 function resolveTypeormExport<T = unknown>(exportName: string): T | undefined {
   try {
-    // Using `require` here (rather than a static import) ensures the
+    // Using `createRequire(import.meta.url)` here (rather than a static import) ensures the
     // reference is resolved at runtime and is not included in the
     // emitted type definitions — which is required for forward
     // compatibility with TypeORM v1 where these symbols no longer exist.
