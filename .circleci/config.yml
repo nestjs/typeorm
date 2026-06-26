@@ -52,7 +52,7 @@ jobs:
             nvm alias default v24
       - run:
           name: Install dependencies
-          command: rm -f package-lock.json && npm install
+          command: npm install
       - run:
           name: Prepare
           command: |
