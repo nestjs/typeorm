@@ -35,7 +35,7 @@
     "pg": "8.22.0",
     "prettier": "3.8.5",
     "reflect-metadata": "0.2.2",
-    "release-it": "20.2.0",
+    "release-it": "20.2.1",
     "rxjs": "7.8.2",
     "supertest": "7.2.2",
     "typeorm": "1.0.0",
