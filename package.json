@@ -33,7 +33,7 @@
     "mysql": "2.18.1",
     "oxlint": "1.71.0",
     "pg": "8.22.0",
-    "prettier": "3.9.0",
+    "prettier": "3.9.1",
     "reflect-metadata": "0.2.2",
     "release-it": "20.2.1",
     "rxjs": "7.8.2",
