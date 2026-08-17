@@ -1,1 +1,1 @@
-export * from './typeorm-options.interface';
+export * from './typeorm-options.interface.js';

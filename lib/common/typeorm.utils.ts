@@ -8,10 +8,10 @@ import {
   EntitySchema,
   Repository,
 } from 'typeorm';
-import { CircularDependencyException } from '../exceptions/circular-dependency.exception';
-import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type';
-import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants';
-import { AbstractRepository } from './typeorm-compat';
+import { CircularDependencyException } from '../exceptions/circular-dependency.exception.js';
+import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type.js';
+import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants.js';
+import { AbstractRepository } from './typeorm-compat.js';
 
 const logger = new Logger('TypeOrmModule');
 
