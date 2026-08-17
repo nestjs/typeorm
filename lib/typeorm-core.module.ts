@@ -41,9 +41,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   ) {}
 
   static forRoot(options: TypeOrmModuleOptions = {}): DynamicModule {
-    DataSourceNameRegistry.register(
-      getDataSourceName(options as DataSourceOptions),
-    );
+    DataSourceNameRegistry.register(getDataSourceName(options));
     const typeOrmModuleOptions = {
       provide: TYPEORM_MODULE_OPTIONS,
       useValue: options,
@@ -150,9 +148,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     } catch (e: any) {
       this.logger.error(e?.message);
     } finally {
-      DataSourceNameRegistry.unregister(
-        getDataSourceName(this.options as DataSourceOptions),
-      );
+      DataSourceNameRegistry.unregister(getDataSourceName(this.options));
     }
   }
 
@@ -208,7 +204,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     options: TypeOrmModuleOptions,
     dataSourceFactory?: TypeOrmDataSourceFactory,
   ): Promise<DataSource> {
-    const dataSourceToken = getDataSourceName(options as DataSourceOptions);
+    const dataSourceToken = getDataSourceName(options);
     const createTypeormDataSource =
       dataSourceFactory ??
       ((options: DataSourceOptions) => new DataSource(options));
