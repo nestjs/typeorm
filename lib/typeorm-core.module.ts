@@ -27,7 +27,10 @@ import {
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
 } from './interfaces/typeorm-options.interface.js';
-import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants.js';
+import {
+  TYPEORM_MODULE_ID,
+  TYPEORM_MODULE_OPTIONS,
+} from './typeorm.constants.js';
 
 @Global()
 @Module({})

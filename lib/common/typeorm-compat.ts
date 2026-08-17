@@ -1,5 +1,7 @@
 import { createRequire } from 'node:module';
 
+const require = createRequire(import.meta.url);
+
 /**
  * Runtime compatibility helpers for accessing TypeORM APIs that were
  * removed in TypeORM v1.0.0 (notably `Connection` and `AbstractRepository`).
@@ -19,15 +21,12 @@ import { createRequire } from 'node:module';
  * package. Returns `undefined` when the export is not present (e.g.
  * TypeORM v1.0.0 has removed it) or when the module fails to load.
  */
-const require = createRequire(import.meta.url);
-
 function resolveTypeormExport<T = unknown>(exportName: string): T | undefined {
   try {
-    // Using `createRequire(import.meta.url)` here (rather than a static import) ensures the
-    // reference is resolved at runtime and is not included in the
-    // emitted type definitions — which is required for forward
+    // Resolving through `createRequire` here (rather than a static import)
+    // ensures the reference is resolved at runtime and is not included in
+    // the emitted type definitions — which is required for forward
     // compatibility with TypeORM v1 where these symbols no longer exist.
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const typeorm = require('typeorm') as Record<string, unknown>;
     return typeorm[exportName] as T | undefined;
   } catch {
