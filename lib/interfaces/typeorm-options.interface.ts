@@ -59,6 +59,7 @@ export interface TypeOrmOptionsFactory {
  */
 export type TypeOrmDataSourceFactory = (
   options?: DataSourceOptions,
+  ...injectedProviders: any[]
 ) => Promise<DataSource>;
 
 /**
@@ -76,5 +77,11 @@ export interface TypeOrmModuleAsyncOptions extends Pick<
   ) => Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
   dataSourceFactory?: TypeOrmDataSourceFactory;
   inject?: any[];
+  /**
+   * Providers to inject into `dataSourceFactory`, in addition to the
+   * resolved `TypeOrmModuleOptions` that is always passed as the first
+   * argument.
+   */
+  dataSourceFactoryInject?: any[];
   extraProviders?: Provider[];
 }
