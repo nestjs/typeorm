@@ -5,6 +5,19 @@
   "author": "Kamil Mysliwiec",
   "license": "MIT",
   "url": "https://github.com/nestjs/typeorm#readme",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.json",
     "format": "prettier --write \"**/*.ts\"",
@@ -20,27 +33,27 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@commitlint/cli": "21.0.2",
-    "@commitlint/config-angular": "21.0.2",
+    "@commitlint/cli": "21.2.2",
+    "@commitlint/config-angular": "21.2.2",
     "@nestjs/common": "12.0.0",
     "@nestjs/core": "12.0.0",
     "@nestjs/platform-express": "12.0.0",
     "@nestjs/testing": "12.0.0",
-    "@types/node": "24.13.2",
-    "@types/supertest": "7.2.0",
+    "@types/node": "24.13.3",
+    "@types/supertest": "7.2.1",
     "husky": "9.1.7",
-    "lint-staged": "17.0.8",
+    "lint-staged": "17.3.0",
     "mysql": "2.18.1",
-    "oxlint": "1.71.0",
-    "pg": "8.22.0",
-    "prettier": "3.8.4",
+    "oxlint": "1.80.0",
+    "pg": "8.23.0",
+    "prettier": "3.9.6",
     "reflect-metadata": "0.2.2",
-    "release-it": "20.2.0",
+    "release-it": "21.0.2",
     "rxjs": "7.8.2",
     "supertest": "7.2.2",
-    "typeorm": "1.0.0",
-    "typescript": "~6.0.2",
-    "vitest": "4.1.9"
+    "typeorm": "1.1.0",
+    "typescript": "~7.0.0",
+    "vitest": "4.1.11"
   },
   "peerDependencies": {
     "@nestjs/common": "^10.0.0 || ^11.0.0 || ^12.0.0",
