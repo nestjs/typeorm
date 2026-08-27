@@ -22,10 +22,10 @@
   "devDependencies": {
     "@commitlint/cli": "21.0.2",
     "@commitlint/config-angular": "21.0.2",
-    "@nestjs/common": "11.1.27",
-    "@nestjs/core": "11.1.27",
-    "@nestjs/platform-express": "11.1.27",
-    "@nestjs/testing": "11.1.27",
+    "@nestjs/common": "12.0.0",
+    "@nestjs/core": "12.0.0",
+    "@nestjs/platform-express": "12.0.0",
+    "@nestjs/testing": "12.0.0",
     "@types/node": "24.13.2",
     "@types/supertest": "7.2.0",
     "husky": "9.1.7",
@@ -43,8 +43,8 @@
     "vitest": "4.1.9"
   },
   "peerDependencies": {
-    "@nestjs/common": "^10.0.0 || ^11.0.0",
-    "@nestjs/core": "^10.0.0 || ^11.0.0",
+    "@nestjs/common": "^10.0.0 || ^11.0.0 || ^12.0.0",
+    "@nestjs/core": "^10.0.0 || ^11.0.0 || ^12.0.0",
     "reflect-metadata": "^0.1.13 || ^0.2.0",
     "rxjs": "^7.2.0",
     "typeorm": "^0.3.0 || ^1.0.0-dev"
