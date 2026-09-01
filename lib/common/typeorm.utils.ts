@@ -58,9 +58,15 @@ export function getRepositoryToken(
   }
 
   if (entity instanceof EntitySchema) {
-    return `${dataSourcePrefix}${
-      entity.options.target ? entity.options.target.name : entity.options.name
-    }Repository`;
+    const schemaName = entity.options.target
+      ? entity.options.target.name
+      : entity.options.name;
+    if (!schemaName) {
+      throw new Error(
+        'EntitySchema must have either "target" or "name" defined',
+      );
+    }
+    return `${dataSourcePrefix}${schemaName}Repository`;
   }
   return `${dataSourcePrefix}${entity.name}Repository`;
 }
