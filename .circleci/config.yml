@@ -7,7 +7,7 @@ aliases:
   - &install-deps
     run:
       name: Install dependencies
-      command: npm install --ignore-scripts
+      command: npm install
   - &build-packages
     run:
       name: Build
@@ -17,14 +17,14 @@ jobs:
   build:
     working_directory: ~/nest
     docker:
-      - image: cimg/node:22.14.0
+      - image: cimg/node:24.20.0
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
-          command: npm install --ignore-scripts
+          command: npm install
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
@@ -35,7 +35,8 @@ jobs:
 
   integration_tests:
     working_directory: ~/nest
-    machine: true
+    machine:
+      image: ubuntu-2404:2026.05.1
     steps:
       - checkout
       - run:
@@ -46,20 +47,16 @@ jobs:
       - run:
           name: Upgrade Node.js
           command: |
-            nvm install v20
+            nvm install v24
             node -v
-            nvm alias default v20
+            nvm alias default v24
       - run:
-          name: Install Docker Compose
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      - *install-deps
+          name: Install dependencies
+          command: npm install
       - run:
           name: Prepare
           command: |
-            docker-compose up -d
+            docker compose up -d
             sleep 10
       - run:
           name: List containers

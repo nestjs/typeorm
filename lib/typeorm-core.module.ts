@@ -10,27 +10,27 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { defer, lastValueFrom } from 'rxjs';
-import {
-  Connection,
-  createConnection,
-  DataSource,
-  DataSourceOptions,
-} from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { Connection } from './common/typeorm-compat.js';
 import {
   generateString,
   getDataSourceName,
   getDataSourceToken,
   getEntityManagerToken,
   handleRetry,
-} from './common/typeorm.utils';
-import { EntitiesMetadataStorage } from './entities-metadata.storage';
+} from './common/typeorm.utils.js';
+import { DataSourceNameRegistry } from './data-source-name.registry.js';
+import { EntitiesMetadataStorage } from './entities-metadata.storage.js';
 import {
   TypeOrmDataSourceFactory,
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
-} from './interfaces/typeorm-options.interface';
-import { TYPEORM_MODULE_ID, TYPEORM_MODULE_OPTIONS } from './typeorm.constants';
+} from './interfaces/typeorm-options.interface.js';
+import {
+  TYPEORM_MODULE_ID,
+  TYPEORM_MODULE_OPTIONS,
+} from './typeorm.constants.js';
 
 @Global()
 @Module({})
@@ -44,6 +44,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   ) {}
 
   static forRoot(options: TypeOrmModuleOptions = {}): DynamicModule {
+    DataSourceNameRegistry.register(getDataSourceName(options));
     const typeOrmModuleOptions = {
       provide: TYPEORM_MODULE_OPTIONS,
       useValue: options,
@@ -63,8 +64,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     ];
     const exports = [entityManagerProvider, dataSourceProvider];
 
-    // TODO: "Connection" class is going to be removed in the next version of "typeorm"
-    if (dataSourceProvider.provide === DataSource) {
+    if (Connection && dataSourceProvider.provide === DataSource) {
       providers.push({
         provide: Connection,
         useExisting: DataSource,
@@ -81,6 +81,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
 
   static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
     const dataSourceFactoryInject = options.dataSourceFactoryInject || [];
+    if (options.name) {
+      DataSourceNameRegistry.register(options.name);
+    }
     const dataSourceProvider = {
       provide: getDataSourceToken(options as DataSourceOptions),
       useFactory: async (
@@ -127,8 +130,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       dataSourceProvider,
     ];
 
-    // TODO: "Connection" class is going to be removed in the next version of "typeorm"
-    if (dataSourceProvider.provide === DataSource) {
+    if (Connection && dataSourceProvider.provide === DataSource) {
       providers.push({
         provide: Connection,
         useExisting: DataSource,
@@ -152,8 +154,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       if (dataSource && dataSource.isInitialized) {
         await dataSource.destroy();
       }
-    } catch (e) {
+    } catch (e: any) {
       this.logger.error(e?.message);
+    } finally {
+      DataSourceNameRegistry.unregister(getDataSourceName(this.options));
     }
   }
 
@@ -210,14 +214,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
     dataSourceFactory?: TypeOrmDataSourceFactory,
     injectedDeps: any[] = [],
   ): Promise<DataSource> {
-    const dataSourceToken = getDataSourceName(options as DataSourceOptions);
-    const createTypeormDataSource: TypeOrmDataSourceFactory =
+    const dataSourceToken = getDataSourceName(options);
+    const createTypeormDataSource =
       dataSourceFactory ??
-      (async (options?: DataSourceOptions) => {
-        return DataSource === undefined
-          ? createConnection(options!)
-          : new DataSource(options!);
-      });
+      ((options: DataSourceOptions) => new DataSource(options));
     return await lastValueFrom(
       defer(async () => {
         let dataSource: DataSource;
@@ -244,10 +244,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
             ...injectedDeps,
           );
         }
-        // TODO: remove "dataSource.initialize" condition (left for backward compatibility)
-        return (dataSource as any).initialize &&
-          !dataSource.isInitialized &&
-          !options.manualInitialization
+        return !dataSource.isInitialized && !options.manualInitialization
           ? dataSource.initialize()
           : dataSource;
       }).pipe(

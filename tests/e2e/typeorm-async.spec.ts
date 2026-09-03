@@ -1,8 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import * as request from 'supertest';
-import { AsyncApplicationModule } from '../src/app-async.module';
 import { Server } from 'http';
+import request from 'supertest';
+import { AsyncApplicationModule } from '../src/app-async.module';
 
 describe('TypeOrm (async configuration)', () => {
   let server: Server;

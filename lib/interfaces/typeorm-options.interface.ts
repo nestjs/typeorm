@@ -6,6 +6,11 @@ import { DataSource, DataSourceOptions } from 'typeorm';
  */
 export type TypeOrmModuleOptions = {
   /**
+   * NestJS-level datasource identifier.
+   * In TypeORM 0.3.x this also existed on DataSourceOptions; in 1.0 it was removed.
+   */
+  name?: string;
+  /**
    * Number of times to retry connecting
    * Default: 10
    */
