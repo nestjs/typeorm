@@ -38,9 +38,7 @@ function getName(
 export function getRepositoryToken(
   entity: EntityClassOrSchema,
   dataSource:
-    | DataSource
-    | DataSourceOptions
-    | string = DEFAULT_DATA_SOURCE_NAME,
+    DataSource | DataSourceOptions | string = DEFAULT_DATA_SOURCE_NAME,
 ): Function | string {
   if (entity === null || entity === undefined) {
     throw new CircularDependencyException('@InjectRepository()');
@@ -58,9 +56,13 @@ export function getRepositoryToken(
   }
 
   if (entity instanceof EntitySchema) {
-    return `${dataSourcePrefix}${
-      entity.options.target ? entity.options.target.name : entity.options.name
-    }Repository`;
+    const schemaName = entity.options.target
+      ? entity.options.target.name
+      : entity.options.name;
+    if (!schemaName) {
+      throw new Error('EntitySchema must define either "target" or "name"');
+    }
+    return `${dataSourcePrefix}${schemaName}Repository`;
   }
   return `${dataSourcePrefix}${entity.name}Repository`;
 }
@@ -89,9 +91,7 @@ export function getCustomRepositoryToken(repository: Function): string {
  */
 export function getDataSourceToken(
   dataSource:
-    | DataSource
-    | DataSourceOptions
-    | string = DEFAULT_DATA_SOURCE_NAME,
+    DataSource | DataSourceOptions | string = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function | Type<DataSource> {
   return DEFAULT_DATA_SOURCE_NAME === dataSource
     ? DataSource
@@ -117,9 +117,7 @@ export const getConnectionToken = getDataSourceToken;
  */
 export function getDataSourcePrefix(
   dataSource:
-    | DataSource
-    | DataSourceOptions
-    | string = DEFAULT_DATA_SOURCE_NAME,
+    DataSource | DataSourceOptions | string = DEFAULT_DATA_SOURCE_NAME,
 ): string {
   if (dataSource === DEFAULT_DATA_SOURCE_NAME) {
     return '';
@@ -142,9 +140,7 @@ export function getDataSourcePrefix(
  */
 export function getEntityManagerToken(
   dataSource:
-    | DataSource
-    | DataSourceOptions
-    | string = DEFAULT_DATA_SOURCE_NAME,
+    DataSource | DataSourceOptions | string = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function {
   return DEFAULT_DATA_SOURCE_NAME === dataSource
     ? EntityManager
