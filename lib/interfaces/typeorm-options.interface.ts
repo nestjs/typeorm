@@ -59,6 +59,7 @@ export interface TypeOrmOptionsFactory {
  */
 export type TypeOrmDataSourceFactory = (
   options?: DataSourceOptions,
+  ...injectedDeps: any[]
 ) => Promise<DataSource>;
 
 /**
@@ -76,5 +77,6 @@ export interface TypeOrmModuleAsyncOptions extends Pick<
   ) => Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
   dataSourceFactory?: TypeOrmDataSourceFactory;
   inject?: any[];
+  dataSourceFactoryInject?: any[];
   extraProviders?: Provider[];
 }
