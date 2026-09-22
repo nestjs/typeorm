@@ -162,7 +162,7 @@ export function getEntityManagerToken(
 }
 
 export function handleRetry(
-  retryAttempts = 9,
+  retryAttempts = 10,
   retryDelay = 3000,
   dataSourceName = DEFAULT_DATA_SOURCE_NAME,
   verboseRetryLog = false,
