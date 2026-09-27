@@ -28,6 +28,7 @@ import {
   TypeOrmOptionsFactory,
 } from './interfaces/typeorm-options.interface.js';
 import {
+  TYPEORM_DATA_SOURCE_NAME,
   TYPEORM_MODULE_ID,
   TYPEORM_MODULE_OPTIONS,
 } from './typeorm.constants.js';
@@ -38,8 +39,8 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   private readonly logger = new Logger('TypeOrmModule');
 
   constructor(
-    @Inject(TYPEORM_MODULE_OPTIONS)
-    private readonly options: TypeOrmModuleOptions,
+    @Inject(TYPEORM_DATA_SOURCE_NAME)
+    private readonly dataSourceName: string,
     private readonly moduleRef: ModuleRef,
   ) {}
 
@@ -61,6 +62,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       entityManagerProvider,
       dataSourceProvider,
       typeOrmModuleOptions,
+      this.createDataSourceNameProvider(options),
     ];
     const exports = [entityManagerProvider, dataSourceProvider];
 
@@ -117,6 +119,7 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         provide: TYPEORM_MODULE_ID,
         useValue: generateString(),
       },
+      this.createDataSourceNameProvider(options),
       ...(options.extraProviders || []),
     ];
     const exports: Array<Provider | Function> = [
@@ -141,18 +144,27 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   }
 
   async onApplicationShutdown(): Promise<void> {
-    const dataSource = this.moduleRef.get<DataSource>(
-      getDataSourceToken(this.options as DataSourceOptions) as Type<DataSource>,
-    );
     try {
+      const dataSource = this.moduleRef.get<DataSource>(
+        getDataSourceToken(this.dataSourceName) as Type<DataSource>,
+      );
       if (dataSource && dataSource.isInitialized) {
         await dataSource.destroy();
       }
     } catch (e: any) {
       this.logger.error(e?.message);
     } finally {
-      DataSourceNameRegistry.unregister(getDataSourceName(this.options));
+      DataSourceNameRegistry.unregister(this.dataSourceName);
     }
+  }
+
+  private static createDataSourceNameProvider(options: {
+    name?: string;
+  }): Provider {
+    return {
+      provide: TYPEORM_DATA_SOURCE_NAME,
+      useValue: getDataSourceName(options),
+    };
   }
 
   private static createAsyncProviders(
