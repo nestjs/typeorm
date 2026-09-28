@@ -45,13 +45,14 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   ) {}
 
   static forRoot(options: TypeOrmModuleOptions = {}): DynamicModule {
-    DataSourceNameRegistry.register(getDataSourceName(options));
+    const dataSourceName = getDataSourceName(options);
+    DataSourceNameRegistry.register(dataSourceName);
     const typeOrmModuleOptions = {
       provide: TYPEORM_MODULE_OPTIONS,
       useValue: options,
     };
     const dataSourceProvider = {
-      provide: getDataSourceToken(options as DataSourceOptions),
+      provide: getDataSourceToken(dataSourceName),
       useFactory: async () => await this.createDataSourceFactory(options),
     };
     const entityManagerProvider = this.createEntityManagerProvider(
@@ -62,7 +63,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       entityManagerProvider,
       dataSourceProvider,
       typeOrmModuleOptions,
-      this.createDataSourceNameProvider(options),
+      {
+        provide: TYPEORM_DATA_SOURCE_NAME,
+        useValue: dataSourceName,
+      },
     ];
     const exports = [entityManagerProvider, dataSourceProvider];
 
@@ -82,11 +86,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   }
 
   static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
-    if (options.name) {
-      DataSourceNameRegistry.register(options.name);
-    }
+    const dataSourceName = getDataSourceName(options);
+    DataSourceNameRegistry.register(dataSourceName);
     const dataSourceProvider = {
-      provide: getDataSourceToken(options as DataSourceOptions),
+      provide: getDataSourceToken(dataSourceName),
       useFactory: async (typeOrmOptions: TypeOrmModuleOptions) => {
         if (options.name) {
           return await this.createDataSourceFactory(
@@ -105,9 +108,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       inject: [TYPEORM_MODULE_OPTIONS],
     };
     const entityManagerProvider = {
-      provide: getEntityManagerToken(options as DataSourceOptions) as string,
+      provide: getEntityManagerToken(dataSourceName) as string,
       useFactory: (dataSource: DataSource) => dataSource.manager,
-      inject: [getDataSourceToken(options as DataSourceOptions)],
+      inject: [getDataSourceToken(dataSourceName)],
     };
 
     const asyncProviders = this.createAsyncProviders(options);
@@ -119,7 +122,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         provide: TYPEORM_MODULE_ID,
         useValue: generateString(),
       },
-      this.createDataSourceNameProvider(options),
+      {
+        provide: TYPEORM_DATA_SOURCE_NAME,
+        useValue: dataSourceName,
+      },
       ...(options.extraProviders || []),
     ];
     const exports: Array<Provider | Function> = [
@@ -152,19 +158,13 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
         await dataSource.destroy();
       }
     } catch (e: any) {
-      this.logger.error(e?.message);
+      this.logger.error(
+        `Failed to close the "${this.dataSourceName}" data source: ${e?.message}`,
+        e?.stack,
+      );
     } finally {
       DataSourceNameRegistry.unregister(this.dataSourceName);
     }
-  }
-
-  private static createDataSourceNameProvider(options: {
-    name?: string;
-  }): Provider {
-    return {
-      provide: TYPEORM_DATA_SOURCE_NAME,
-      useValue: getDataSourceName(options),
-    };
   }
 
   private static createAsyncProviders(
