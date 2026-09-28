@@ -28,6 +28,7 @@ import {
   TypeOrmOptionsFactory,
 } from './interfaces/typeorm-options.interface.js';
 import {
+  TYPEORM_DATA_SOURCE_NAME,
   TYPEORM_MODULE_ID,
   TYPEORM_MODULE_OPTIONS,
 } from './typeorm.constants.js';
@@ -38,19 +39,20 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   private readonly logger = new Logger('TypeOrmModule');
 
   constructor(
-    @Inject(TYPEORM_MODULE_OPTIONS)
-    private readonly options: TypeOrmModuleOptions,
+    @Inject(TYPEORM_DATA_SOURCE_NAME)
+    private readonly dataSourceName: string,
     private readonly moduleRef: ModuleRef,
   ) {}
 
   static forRoot(options: TypeOrmModuleOptions = {}): DynamicModule {
-    DataSourceNameRegistry.register(getDataSourceName(options));
+    const dataSourceName = getDataSourceName(options);
+    DataSourceNameRegistry.register(dataSourceName);
     const typeOrmModuleOptions = {
       provide: TYPEORM_MODULE_OPTIONS,
       useValue: options,
     };
     const dataSourceProvider = {
-      provide: getDataSourceToken(options as DataSourceOptions),
+      provide: getDataSourceToken(dataSourceName),
       useFactory: async () => await this.createDataSourceFactory(options),
     };
     const entityManagerProvider = this.createEntityManagerProvider(
@@ -61,6 +63,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       entityManagerProvider,
       dataSourceProvider,
       typeOrmModuleOptions,
+      {
+        provide: TYPEORM_DATA_SOURCE_NAME,
+        useValue: dataSourceName,
+      },
     ];
     const exports = [entityManagerProvider, dataSourceProvider];
 
@@ -80,11 +86,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   }
 
   static forRootAsync(options: TypeOrmModuleAsyncOptions): DynamicModule {
-    if (options.name) {
-      DataSourceNameRegistry.register(options.name);
-    }
+    const dataSourceName = getDataSourceName(options);
+    DataSourceNameRegistry.register(dataSourceName);
     const dataSourceProvider = {
-      provide: getDataSourceToken(options as DataSourceOptions),
+      provide: getDataSourceToken(dataSourceName),
       useFactory: async (typeOrmOptions: TypeOrmModuleOptions) => {
         if (options.name) {
           return await this.createDataSourceFactory(
@@ -103,9 +108,9 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       inject: [TYPEORM_MODULE_OPTIONS],
     };
     const entityManagerProvider = {
-      provide: getEntityManagerToken(options as DataSourceOptions) as string,
+      provide: getEntityManagerToken(dataSourceName) as string,
       useFactory: (dataSource: DataSource) => dataSource.manager,
-      inject: [getDataSourceToken(options as DataSourceOptions)],
+      inject: [getDataSourceToken(dataSourceName)],
     };
 
     const asyncProviders = this.createAsyncProviders(options);
@@ -116,6 +121,10 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
       {
         provide: TYPEORM_MODULE_ID,
         useValue: generateString(),
+      },
+      {
+        provide: TYPEORM_DATA_SOURCE_NAME,
+        useValue: dataSourceName,
       },
       ...(options.extraProviders || []),
     ];
@@ -141,17 +150,20 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
   }
 
   async onApplicationShutdown(): Promise<void> {
-    const dataSource = this.moduleRef.get<DataSource>(
-      getDataSourceToken(this.options as DataSourceOptions) as Type<DataSource>,
-    );
     try {
+      const dataSource = this.moduleRef.get<DataSource>(
+        getDataSourceToken(this.dataSourceName) as Type<DataSource>,
+      );
       if (dataSource && dataSource.isInitialized) {
         await dataSource.destroy();
       }
     } catch (e: any) {
-      this.logger.error(e?.message);
+      this.logger.error(
+        `Failed to close the "${this.dataSourceName}" data source: ${e?.message}`,
+        e?.stack,
+      );
     } finally {
-      DataSourceNameRegistry.unregister(getDataSourceName(this.options));
+      DataSourceNameRegistry.unregister(this.dataSourceName);
     }
   }
 
