@@ -46,7 +46,7 @@
     "lint-staged": "17.6.0",
     "mysql": "2.18.1",
     "oxlint": "1.86.0",
-    "pg": "8.23.0",
+    "pg": "8.23.1",
     "prettier": "3.9.9",
     "reflect-metadata": "0.2.2",
     "release-it": "21.1.0",
