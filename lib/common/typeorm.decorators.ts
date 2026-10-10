@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSourceRef } from '../interfaces/data-source-ref.type.js';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type.js';
 import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants.js';
 import {
@@ -20,10 +20,9 @@ export const InjectRepository = (
  * @publicApi
  */
 export const InjectDataSource: (
-  dataSource?: DataSource | DataSourceOptions | string,
-) => ReturnType<typeof Inject> = (
-  dataSource?: DataSource | DataSourceOptions | string,
-) => Inject(getDataSourceToken(dataSource));
+  dataSource?: DataSourceRef,
+) => ReturnType<typeof Inject> = (dataSource?: DataSourceRef) =>
+  Inject(getDataSourceToken(dataSource));
 
 /** @deprecated */
 export const InjectConnection = InjectDataSource;
@@ -32,7 +31,6 @@ export const InjectConnection = InjectDataSource;
  * @publicApi
  */
 export const InjectEntityManager: (
-  dataSource?: DataSource | DataSourceOptions | string,
-) => ReturnType<typeof Inject> = (
-  dataSource?: DataSource | DataSourceOptions | string,
-) => Inject(getEntityManagerToken(dataSource));
+  dataSource?: DataSourceRef,
+) => ReturnType<typeof Inject> = (dataSource?: DataSourceRef) =>
+  Inject(getEntityManagerToken(dataSource));
