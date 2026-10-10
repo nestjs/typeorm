@@ -1,5 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSourceRef } from './interfaces/data-source-ref.type.js';
 import { EntitiesMetadataStorage } from './entities-metadata.storage.js';
 import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type.js';
 import {
@@ -34,10 +34,7 @@ export class TypeOrmModule {
 
   static forFeature(
     entities: EntityClassOrSchema[] = [],
-    dataSource:
-      | DataSource
-      | DataSourceOptions
-      | string = DEFAULT_DATA_SOURCE_NAME,
+    dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
   ): DynamicModule {
     const providers = createTypeOrmProviders(entities, dataSource);
     EntitiesMetadataStorage.addEntitiesByDataSource(dataSource, [...entities]);

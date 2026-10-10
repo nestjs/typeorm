@@ -1,27 +1,19 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { resolveDataSourceName } from './common/typeorm.utils.js';
+import { DataSourceRef } from './interfaces/data-source-ref.type.js';
 import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type.js';
-
-type DataSourceToken = DataSource | DataSourceOptions | string;
 
 export class EntitiesMetadataStorage {
   private static readonly storage = new Map<string, EntityClassOrSchema[]>();
 
   static addEntitiesByDataSource(
-    dataSource: DataSourceToken,
+    dataSource: DataSourceRef,
     entities: EntityClassOrSchema[],
   ): void {
-    const dataSourceToken =
-      typeof dataSource === 'string'
-        ? dataSource
-        : (dataSource as { name?: string }).name;
-    if (!dataSourceToken) {
-      return;
-    }
-
-    let collection = this.storage.get(dataSourceToken);
+    const dataSourceName = resolveDataSourceName(dataSource);
+    let collection = this.storage.get(dataSourceName);
     if (!collection) {
       collection = [];
-      this.storage.set(dataSourceToken, collection);
+      this.storage.set(dataSourceName, collection);
     }
     entities.forEach((entity) => {
       if (collection.includes(entity)) {
@@ -32,16 +24,8 @@ export class EntitiesMetadataStorage {
   }
 
   static getEntitiesByDataSource(
-    dataSource: DataSourceToken,
+    dataSource: DataSourceRef,
   ): EntityClassOrSchema[] {
-    const dataSourceToken =
-      typeof dataSource === 'string'
-        ? dataSource
-        : (dataSource as { name?: string }).name;
-
-    if (!dataSourceToken) {
-      return [];
-    }
-    return this.storage.get(dataSourceToken) || [];
+    return this.storage.get(resolveDataSourceName(dataSource)) || [];
   }
 }

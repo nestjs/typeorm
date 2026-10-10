@@ -1,14 +1,9 @@
 import { Logger, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { delay, retryWhen, scan } from 'rxjs/operators';
-import {
-  DataSource,
-  DataSourceOptions,
-  EntityManager,
-  EntitySchema,
-  Repository,
-} from 'typeorm';
+import { DataSource, EntityManager, EntitySchema, Repository } from 'typeorm';
 import { CircularDependencyException } from '../exceptions/circular-dependency.exception.js';
+import { DataSourceRef } from '../interfaces/data-source-ref.type.js';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type.js';
 import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants.js';
 import { AbstractRepository } from './typeorm-compat.js';
@@ -16,15 +11,23 @@ import { AbstractRepository } from './typeorm-compat.js';
 const logger = new Logger('TypeOrmModule');
 
 /**
- * Reads the NestJS-level data source `name`. TypeORM v1 removed `name` from
- * `DataSource` and `DataSourceOptions`, so it is accessed defensively while
- * remaining backward compatible with 0.3.x (where the user-supplied options
- * still carry it at runtime).
+ * This function returns the DataSource name for the given DataSource, DataSourceOptions
+ * or dataSource name. TypeORM v1 removed `name` from `DataSource` and `DataSourceOptions`,
+ * so it is read defensively while remaining backward compatible with 0.3.x
+ * (where the user-supplied options still carry it).
+ * @param {DataSource | DataSourceOptions | string} [dataSource='default'] This optional
+ * parameter is either a DataSource, or a DataSourceOptions or a string.
+ * @returns {string} The DataSource name, or 'default' when no name is set.
+ *
+ * @publicApi
  */
-function getName(
-  dataSource: DataSource | DataSourceOptions,
-): string | undefined {
-  return (dataSource as { name?: string }).name;
+export function resolveDataSourceName(
+  dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
+): string {
+  if (typeof dataSource === 'string') {
+    return dataSource;
+  }
+  return (dataSource as { name?: string }).name || DEFAULT_DATA_SOURCE_NAME;
 }
 
 /**
@@ -37,10 +40,7 @@ function getName(
  */
 export function getRepositoryToken(
   entity: EntityClassOrSchema,
-  dataSource:
-    | DataSource
-    | DataSourceOptions
-    | string = DEFAULT_DATA_SOURCE_NAME,
+  dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
 ): Function | string {
   if (entity === null || entity === undefined) {
     throw new CircularDependencyException('@InjectRepository()');
@@ -94,18 +94,10 @@ export function getCustomRepositoryToken(repository: Function): string {
  * @publicApi
  */
 export function getDataSourceToken(
-  dataSource:
-    | DataSource
-    | DataSourceOptions
-    | string = DEFAULT_DATA_SOURCE_NAME,
+  dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function | Type<DataSource> {
-  return DEFAULT_DATA_SOURCE_NAME === dataSource
-    ? DataSource
-    : 'string' === typeof dataSource
-      ? `${dataSource}DataSource`
-      : DEFAULT_DATA_SOURCE_NAME === getName(dataSource) || !getName(dataSource)
-        ? DataSource
-        : `${getName(dataSource)}DataSource`;
+  const name = resolveDataSourceName(dataSource);
+  return name === DEFAULT_DATA_SOURCE_NAME ? DataSource : `${name}DataSource`;
 }
 
 /**
@@ -122,22 +114,10 @@ export const getConnectionToken = getDataSourceToken;
  * @returns {string | Function} The DataSource injection token.
  */
 export function getDataSourcePrefix(
-  dataSource:
-    | DataSource
-    | DataSourceOptions
-    | string = DEFAULT_DATA_SOURCE_NAME,
+  dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
 ): string {
-  if (dataSource === DEFAULT_DATA_SOURCE_NAME) {
-    return '';
-  }
-  if (typeof dataSource === 'string') {
-    return dataSource + '_';
-  }
-  const name = getName(dataSource);
-  if (name === DEFAULT_DATA_SOURCE_NAME || !name) {
-    return '';
-  }
-  return name + '_';
+  const name = resolveDataSourceName(dataSource);
+  return name === DEFAULT_DATA_SOURCE_NAME ? '' : `${name}_`;
 }
 
 /**
@@ -147,18 +127,12 @@ export function getDataSourcePrefix(
  * @returns {string | Function} The EntityManager injection token.
  */
 export function getEntityManagerToken(
-  dataSource:
-    | DataSource
-    | DataSourceOptions
-    | string = DEFAULT_DATA_SOURCE_NAME,
+  dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function {
-  return DEFAULT_DATA_SOURCE_NAME === dataSource
+  const name = resolveDataSourceName(dataSource);
+  return name === DEFAULT_DATA_SOURCE_NAME
     ? EntityManager
-    : 'string' === typeof dataSource
-      ? `${dataSource}EntityManager`
-      : DEFAULT_DATA_SOURCE_NAME === getName(dataSource) || !getName(dataSource)
-        ? EntityManager
-        : `${getName(dataSource)}EntityManager`;
+    : `${name}EntityManager`;
 }
 
 export function handleRetry(
