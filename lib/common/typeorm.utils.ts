@@ -21,13 +21,15 @@ const logger = new Logger('TypeOrmModule');
  *
  * @publicApi
  */
-export function resolveDataSourceName(
-  dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
+export function getDataSourceName(
+  dataSource: DataSourceRef | { name?: string } = DEFAULT_DATA_SOURCE_NAME,
 ): string {
   if (typeof dataSource === 'string') {
     return dataSource;
   }
-  return (dataSource as { name?: string }).name || DEFAULT_DATA_SOURCE_NAME;
+  return (
+    (dataSource as { name?: string } | null)?.name || DEFAULT_DATA_SOURCE_NAME
+  );
 }
 
 /**
@@ -96,7 +98,7 @@ export function getCustomRepositoryToken(repository: Function): string {
 export function getDataSourceToken(
   dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function | Type<DataSource> {
-  const name = resolveDataSourceName(dataSource);
+  const name = getDataSourceName(dataSource);
   return name === DEFAULT_DATA_SOURCE_NAME ? DataSource : `${name}DataSource`;
 }
 
@@ -116,7 +118,7 @@ export const getConnectionToken = getDataSourceToken;
 export function getDataSourcePrefix(
   dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
 ): string {
-  const name = resolveDataSourceName(dataSource);
+  const name = getDataSourceName(dataSource);
   return name === DEFAULT_DATA_SOURCE_NAME ? '' : `${name}_`;
 }
 
@@ -129,7 +131,7 @@ export function getDataSourcePrefix(
 export function getEntityManagerToken(
   dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
 ): string | Function {
-  const name = resolveDataSourceName(dataSource);
+  const name = getDataSourceName(dataSource);
   return name === DEFAULT_DATA_SOURCE_NAME
     ? EntityManager
     : `${name}EntityManager`;
@@ -173,10 +175,6 @@ export function handleRetry(
         ),
       ),
     );
-}
-
-export function getDataSourceName(options: { name?: string }): string {
-  return options && options.name ? options.name : DEFAULT_DATA_SOURCE_NAME;
 }
 
 export const generateString = (): string => crypto.randomUUID();

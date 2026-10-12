@@ -1,4 +1,4 @@
-import { resolveDataSourceName } from './common/typeorm.utils.js';
+import { getDataSourceName } from './common/typeorm.utils.js';
 import { DataSourceRef } from './interfaces/data-source-ref.type.js';
 import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type.js';
 
@@ -9,7 +9,7 @@ export class EntitiesMetadataStorage {
     dataSource: DataSourceRef,
     entities: EntityClassOrSchema[],
   ): void {
-    const dataSourceName = resolveDataSourceName(dataSource);
+    const dataSourceName = getDataSourceName(dataSource);
     let collection = this.storage.get(dataSourceName);
     if (!collection) {
       collection = [];
@@ -26,6 +26,6 @@ export class EntitiesMetadataStorage {
   static getEntitiesByDataSource(
     dataSource: DataSourceRef,
   ): EntityClassOrSchema[] {
-    return this.storage.get(resolveDataSourceName(dataSource)) || [];
+    return this.storage.get(getDataSourceName(dataSource)) || [];
   }
 }

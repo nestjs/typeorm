@@ -1,9 +1,9 @@
 import { DataSource, DataSourceOptions, EntityManager } from 'typeorm';
 import {
+  getDataSourceName,
   getDataSourcePrefix,
   getDataSourceToken,
   getEntityManagerToken,
-  resolveDataSourceName,
 } from '../../lib';
 import { DataSourceRef } from '../../lib/interfaces/data-source-ref.type.js';
 
@@ -30,7 +30,7 @@ const fooRefs: [string, DataSourceRef][] = [
 describe('data source reference resolution', () => {
   describe.each(defaultRefs)('default data source via %s', (_, ref) => {
     it('resolves to the default name', () => {
-      expect(resolveDataSourceName(ref)).toBe('default');
+      expect(getDataSourceName(ref)).toBe('default');
     });
 
     it('returns the DataSource class as data source token', () => {
@@ -48,7 +48,7 @@ describe('data source reference resolution', () => {
 
   describe.each(fooRefs)('named data source via %s', (_, ref) => {
     it('resolves to the given name', () => {
-      expect(resolveDataSourceName(ref)).toBe('foo');
+      expect(getDataSourceName(ref)).toBe('foo');
     });
 
     it('returns a named data source token', () => {
