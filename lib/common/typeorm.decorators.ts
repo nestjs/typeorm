@@ -13,7 +13,7 @@ import {
  */
 export const InjectRepository = (
   entity: EntityClassOrSchema,
-  dataSource: string = DEFAULT_DATA_SOURCE_NAME,
+  dataSource: DataSourceRef = DEFAULT_DATA_SOURCE_NAME,
 ): ReturnType<typeof Inject> => Inject(getRepositoryToken(entity, dataSource));
 
 /**
