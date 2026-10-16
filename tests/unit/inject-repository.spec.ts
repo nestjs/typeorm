@@ -1,41 +1,48 @@
 import 'reflect-metadata';
-import { SELF_DECLARED_DEPS_METADATA } from '@nestjs/common/constants.js';
+import { Injectable } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
 import { DataSourceOptions, Repository } from 'typeorm';
-import { InjectRepository } from '../../lib';
+import { getRepositoryToken, InjectRepository } from '../../lib';
 import { Photo } from '../src/photo/photo.entity';
 
 const fooOptions = { type: 'postgres', name: 'foo' } as DataSourceOptions;
 
-function injectedToken(target: Function): unknown {
-  return Reflect.getMetadata(SELF_DECLARED_DEPS_METADATA, target)[0].param;
+@Injectable()
+class ByName {
+  constructor(
+    @InjectRepository(Photo, 'foo')
+    readonly repository: Repository<Photo>,
+  ) {}
+}
+
+@Injectable()
+class ByOptions {
+  constructor(
+    @InjectRepository(Photo, fooOptions)
+    readonly repository: Repository<Photo>,
+  ) {}
 }
 
 describe('InjectRepository', () => {
-  it('accepts data source options as the data source reference', () => {
-    class ByOptions {
-      constructor(
-        @InjectRepository(Photo, fooOptions)
-        readonly repository: Repository<Photo>,
-      ) {}
-    }
+  const fooRepository = {} as Repository<Photo>;
 
-    expect(injectedToken(ByOptions)).toBe('foo_PhotoRepository');
+  async function resolve<T>(target: new (...args: any[]) => T): Promise<T> {
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        target,
+        { provide: getRepositoryToken(Photo, 'foo'), useValue: fooRepository },
+      ],
+    }).compile();
+    return moduleRef.get(target);
+  }
+
+  it('accepts data source options as the data source reference', async () => {
+    expect((await resolve(ByOptions)).repository).toBe(fooRepository);
   });
 
-  it('resolves options and name to the same token', () => {
-    class ByName {
-      constructor(
-        @InjectRepository(Photo, 'foo')
-        readonly repository: Repository<Photo>,
-      ) {}
-    }
-    class ByOptions {
-      constructor(
-        @InjectRepository(Photo, fooOptions)
-        readonly repository: Repository<Photo>,
-      ) {}
-    }
-
-    expect(injectedToken(ByOptions)).toBe(injectedToken(ByName));
+  it('resolves options and name to the same repository', async () => {
+    expect((await resolve(ByOptions)).repository).toBe(
+      (await resolve(ByName)).repository,
+    );
   });
 });

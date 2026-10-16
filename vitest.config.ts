@@ -7,5 +7,10 @@ export default defineConfig({
     globals: true,
     pool: 'forks',
     testTimeout: 30000,
+    typecheck: {
+      enabled: true,
+      include: ['tests/**/*.spec-d.ts'],
+      tsconfig: './tsconfig.spec.json',
+    },
   },
 });
