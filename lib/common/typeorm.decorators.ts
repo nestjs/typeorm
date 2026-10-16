@@ -1,7 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { DataSourceRef } from '../interfaces/data-source-ref.type.js';
 import { EntityClassOrSchema } from '../interfaces/entity-class-or-schema.type.js';
-import { DEFAULT_DATA_SOURCE_NAME } from '../typeorm.constants.js';
 import {
   getDataSourceToken,
   getEntityManagerToken,
@@ -13,7 +12,7 @@ import {
  */
 export const InjectRepository = (
   entity: EntityClassOrSchema,
-  dataSource: string = DEFAULT_DATA_SOURCE_NAME,
+  dataSource?: DataSourceRef,
 ): ReturnType<typeof Inject> => Inject(getRepositoryToken(entity, dataSource));
 
 /**

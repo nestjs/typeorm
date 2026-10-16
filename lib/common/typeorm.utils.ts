@@ -35,7 +35,8 @@ export function getDataSourceName(
 /**
  * This function generates an injection token for an Entity or Repository
  * @param {EntityClassOrSchema} entity parameter can either be an Entity or Repository
- * @param {string} [dataSource='default'] DataSource name
+ * @param {DataSource | DataSourceOptions | string} [dataSource='default'] This optional parameter is either
+ * a DataSource, or a DataSourceOptions or a string.
  * @returns {string} The Entity | Repository injection token
  *
  * @publicApi
