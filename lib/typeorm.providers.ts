@@ -14,9 +14,9 @@ export function createTypeOrmProviders(
   return (entities || []).map((entity) => ({
     provide: getRepositoryToken(entity, dataSource),
     useFactory: (dataSource: DataSource) => {
-      const entityMetadata = dataSource.entityMetadatas.find(
-        (meta) => meta.target === entity,
-      );
+      const entityMetadata = dataSource.hasMetadata(entity)
+        ? dataSource.getMetadata(entity)
+        : undefined;
       const isTreeEntity = typeof entityMetadata?.treeType !== 'undefined';
       return isTreeEntity
         ? dataSource.getTreeRepository(entity)
