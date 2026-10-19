@@ -1,5 +1,5 @@
 import { Provider } from '@nestjs/common';
-import { DataSource, getMetadataArgsStorage } from 'typeorm';
+import { DataSource, EntitySchema, getMetadataArgsStorage } from 'typeorm';
 import {
   getDataSourceToken,
   getRepositoryToken,
@@ -14,15 +14,20 @@ export function createTypeOrmProviders(
   return (entities || []).map((entity) => ({
     provide: getRepositoryToken(entity, dataSource),
     useFactory: (dataSource: DataSource) => {
-      const entityMetadata = dataSource.hasMetadata(entity)
-        ? dataSource.getMetadata(entity)
-        : undefined;
+      if (dataSource.options.type === 'mongodb') {
+        return dataSource.getMongoRepository(entity);
+      }
+      const target =
+        entity instanceof EntitySchema
+          ? (entity.options.target ?? entity.options.name)
+          : entity;
+      const entityMetadata = dataSource.entityMetadatas.find(
+        (meta) => meta.target === target,
+      );
       const isTreeEntity = typeof entityMetadata?.treeType !== 'undefined';
       return isTreeEntity
         ? dataSource.getTreeRepository(entity)
-        : dataSource.options.type === 'mongodb'
-          ? dataSource.getMongoRepository(entity)
-          : dataSource.getRepository(entity);
+        : dataSource.getRepository(entity);
     },
     inject: [getDataSourceToken(dataSource)],
     /**
