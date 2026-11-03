@@ -231,15 +231,13 @@ export class TypeOrmCoreModule implements OnApplicationShutdown {
             options as DataSourceOptions,
           );
         } else {
-          let entities = options.entities;
-          if (Array.isArray(entities)) {
-            entities = entities.concat(
-              EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken),
-            );
-          } else {
-            entities =
-              EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken);
-          }
+          // `entities` can be an array or an object map (e.g. `import * as entities`)
+          const explicitEntities = Array.isArray(options.entities)
+            ? options.entities
+            : Object.values(options.entities ?? {});
+          const entities = explicitEntities.concat(
+            EntitiesMetadataStorage.getEntitiesByDataSource(dataSourceToken),
+          );
           dataSource = await createTypeormDataSource({
             ...options,
             entities,
