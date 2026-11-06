@@ -1,7 +1,18 @@
 {
   "name": "@nestjs/typeorm",
   "version": "12.0.2",
-  "description": "Nest - modern, fast, powerful node.js web framework (@typeorm)",
+  "description": "TypeORM for NestJS: connections and repositories through dependency injection, entities, transactions and multiple databases.",
+  "keywords": [
+    "nestjs",
+    "nest",
+    "typeorm",
+    "orm",
+    "sql",
+    "postgres",
+    "mysql",
+    "database",
+    "repository"
+  ],
   "author": "Kamil Mysliwiec",
   "license": "MIT",
   "url": "https://github.com/nestjs/typeorm#readme",
