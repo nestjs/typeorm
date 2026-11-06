@@ -1,6 +1,6 @@
 {
   "name": "@nestjs/typeorm",
-  "version": "12.0.2",
+  "version": "12.0.3",
   "description": "TypeORM for NestJS: connections and repositories through dependency injection, entities, transactions and multiple databases.",
   "keywords": [
     "nestjs",
