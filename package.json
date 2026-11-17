@@ -56,7 +56,7 @@
     "husky": "9.1.7",
     "lint-staged": "17.6.1",
     "mysql": "2.18.1",
-    "oxlint": "1.93.0",
+    "oxlint": "1.94.0",
     "pg": "8.23.1",
     "prettier": "3.10.1",
     "reflect-metadata": "0.2.2",
