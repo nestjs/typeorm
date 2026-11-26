@@ -35,6 +35,10 @@ $ npm i --save @nestjs/typeorm typeorm
 
 [Overview & Tutorial](https://docs.nestjs.com/techniques/sql)
 
+## Observability
+
+[NestJS Observe](https://observe.nestjs.com/?ref=readme-typeorm), the official observability platform for Nest, records TypeORM queries with no configuration: every statement is a span nested under the provider method that ran it, with its values removed (`SELECT "o"."id" FROM "orders" "o" WHERE "o"."customer_id" = $1`), so a slow endpoint shows which query it was waiting on and an N+1 loop shows up as one statement repeated. Each release's verdict lists the query shapes it added or changed. Queries are read at the driver - `pg`, `mysql2`, `mssql` and `mongodb` - so SQLite is not covered. See [Database queries](https://docs.nestjs.com/observability/sdk#database-queries-and-outbound-http) in the Observability chapter.
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
