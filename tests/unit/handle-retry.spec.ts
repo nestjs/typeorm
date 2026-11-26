@@ -9,9 +9,11 @@ describe('handleRetry', () => {
     return throwError(() => new Error(`attempt ${attempts} failed`));
   });
 
+  let errorSpy: ReturnType<typeof vi.spyOn>;
+
   beforeEach(() => {
     attempts = 0;
-    vi.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
+    errorSpy = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -41,5 +43,26 @@ describe('handleRetry', () => {
       ),
     ).rejects.toThrow('attempt 1 failed');
     expect(attempts).toBe(1);
+  });
+
+  it('does not announce a retry after the last attempt', async () => {
+    await expect(
+      lastValueFrom(failingConnection.pipe(handleRetry(2, 0))),
+    ).rejects.toThrow('attempt 2 failed');
+    const messages = errorSpy.mock.calls.map(([message]) => message);
+    expect(messages).toEqual([
+      'Unable to connect to the database. Retrying (1)...',
+      'Unable to connect to the database.',
+    ]);
+  });
+
+  it('does not announce a retry when retryAttempts is 0', async () => {
+    await expect(
+      lastValueFrom(failingConnection.pipe(handleRetry(0, 0))),
+    ).rejects.toThrow('attempt 1 failed');
+    expect(errorSpy).toHaveBeenCalledWith(
+      'Unable to connect to the database.',
+      expect.any(String),
+    );
   });
 });

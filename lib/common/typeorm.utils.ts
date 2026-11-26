@@ -160,14 +160,16 @@ export function handleRetry(
             const verboseMessage = verboseRetryLog
               ? ` Message: ${error.message}.`
               : '';
+            const isLastAttempt = errorCount + 1 >= retryAttempts;
+            const retryMessage = isLastAttempt
+              ? ''
+              : ` Retrying (${errorCount + 1})...`;
 
             logger.error(
-              `Unable to connect to the database${dataSourceInfo}.${verboseMessage} Retrying (${
-                errorCount + 1
-              })...`,
+              `Unable to connect to the database${dataSourceInfo}.${verboseMessage}${retryMessage}`,
               error.stack,
             );
-            if (errorCount + 1 >= retryAttempts) {
+            if (isLastAttempt) {
               throw error;
             }
             return errorCount + 1;
